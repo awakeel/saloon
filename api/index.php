@@ -1,6 +1,7 @@
 <?php
 session_start();
 require 'Slim/Slim.php';
+require 'classes/Language.php';
 
 $app = new Slim();
 // Section employees
@@ -16,6 +17,25 @@ $app->get('/employees/:id/reports', authorize('user'),	'getReports');
 $app->get('/employees/search/:query', authorize('user'), 'getEmployeesByName');
 $app->get('/employees/modifiedsince/:timestamp', authorize('user'), 'findByModifiedDate');
 // Section Employee end
+
+//object of langauge class
+//$language_obj = new Language();
+//$language_obj->getLanguages(0);
+
+// Section language
+$app->get('/languages', function () {
+	if(authorize('user')){
+		$offset = $_GET['offset'];
+                $language_obj = new Language();
+		$language_obj->getLanguages($offset);
+	}
+});
+//$app->get('/employees', authorize('user'), 'getEmployees');
+//$app->get('/languages/:id', authorize('user'),	'getLanguage');
+//$app->get('/languages/:id/reports', authorize('user'),	'getReports');
+//$app->get('/languages/search/:query', authorize('user'), 'getEmployeesByName');
+//$app->get('/languages/modifiedsince/:timestamp', authorize('user'), 'findByModifiedDate');
+// Section language end
 
 
 // I add the login route as a post, since we will be posting the login form info
@@ -205,6 +225,28 @@ function getModifiedEmployees($modifiedSince) {
 	}
 }
 
+//function getLanguages($offset) { 
+//	$newOffset = $offset + 10;
+//    $sql = "select * from language limit $offset,$newOffset";
+//	try {
+//		$db = getConnection();
+//		$stmt = $db->query($sql);
+//		$languages = $stmt->fetchAll(PDO::FETCH_OBJ);
+//		$db = null;
+//
+//        // Include support for JSONP requests
+//        if (!isset($_GET['callback'])) {
+//            echo json_encode($languages);
+//        } else {
+//            echo $_GET['callback'] . '(' . json_encode($languages) . ');';
+//        }
+//
+//	} catch(PDOException $e) {
+//		$error = array("error"=> array("text"=>$e->getMessage()));
+//        	echo json_encode($error);
+//	}
+//}
+
 function getConnection() {
 	$dbhost="127.0.0.1";
 	$dbuser="root";
@@ -214,5 +256,4 @@ function getConnection() {
 	$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	return $dbh;
 }
-
 ?>
