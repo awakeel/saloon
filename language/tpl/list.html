@@ -1,11 +1,10 @@
- 
                                            		<td><%=this.model.get('id')%></td>
                                                 <td><%=this.model.get('title')%></td>
                                                 <td><%=this.model.get('languagetitle')%></td> 
-                                                <td width="18%">
-                                                	<button class="btn btn-danger delete-token" data-id="<%=this.model.get('id')%>"> Delete </button>
-                                                	<button class="btn btn-info activate-token">Activate</button>
-                                                
+                                                <td width="25%">
+                                                	<button class="btn btn-danger delete-token" data-id="<%=this.model.get('id')%>"> <%=this.setting.language['delete']%></button>
+                                                	<button class="btn btn-info activate-token"><%=this.setting.language['activate']%></button>
+                                                	<button class="btn btn-success edit-token"><%=this.setting.language['edit']%></button>
                                                 </td>
                                            
                                            

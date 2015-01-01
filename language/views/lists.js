@@ -23,7 +23,7 @@ define(['text!language/tpl/lists.html','language/collections/languages','languag
 				
 			},
 			closePopup:function(){
-				this.$el.find("#popup").hide();
+				//this.$el.find("#popup").hide();
 			},
 			render: function () { 
 				this.$el.html(this.template({}));
@@ -46,7 +46,7 @@ define(['text!language/tpl/lists.html','language/collections/languages','languag
 	                    this.request.abort();
 				 this.request = this.objLanguages.fetch({data: _data, success: function(data) {
 					_.each(data.models,function(model){
-						var objLanguage = new Language({model:model,parent:that});
+						var objLanguage = new Language({model:model,page:that,setting:that.setting});
 						that.$el.find('tbody').append(objLanguage.$el);
 					})
 					that.offsetLength = data.length;
@@ -136,7 +136,7 @@ define(['text!language/tpl/lists.html','language/collections/languages','languag
             	objLanguage.save(); 
             	this.objLanguages.add(objLanguage);  
                 var last_model = this.objLanguages.last();
-                this.closePopup();
+                //this.closePopup();
                 var objLanguage = new Language({model:objLanguage});
 				this.$el.find('tbody').prepend(objLanguage.$el);
             }

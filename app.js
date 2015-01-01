@@ -383,6 +383,13 @@ define(['language/collections/languages'], function (Language) {
             }
             return msie;
         }, 
+        successMessage:function(text){
+        	var info = '<div class="alert alert-success top-message">';
+        	info +='<strong>'+this.language['successalert']+':</strong>  '+ this.language['successtext']+'.';
+        	info +='</div>';
+        	$(".page-content").prepend(info);
+        	setTimeout(function(){ $(".page-content .top-message").remove()}, 3000);
+        }
     });
 
     return new app();

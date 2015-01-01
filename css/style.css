@@ -2036,6 +2036,13 @@ input[type="checkbox"]:checked::after,
 .input-group-addon input[type="checkbox"] {
     margin-bottom: -3px;
 }
+.top-message{
+	position: absolute;
+top: 94px;
+left: 30%;
+min-width: 30%;
+z-index: 9;
+}
 
 @media(min-width:768px) {
     .navbar-form .form-group {
