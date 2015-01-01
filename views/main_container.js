@@ -7,11 +7,12 @@ define(['jquery', 'backbone','views/breadcrumb',  'views/header','dashboard/view
                 tagName: 'div',
                 
                 initialize: function () {
-                    this.objHeader = new HeaderView();
-                    this.objFooter = new FooterView();
-                    this.objLeftMenu = new LeftMenu();
-                    this.objDashboard = new Dashboard();
-                    this.objBreadCrumb = new BreadCrumb();
+                	this.setting = this.options.setting;
+                    this.objHeader = new HeaderView({setting:this.setting});
+                    this.objFooter = new FooterView({setting:this.setting});
+                    this.objLeftMenu = new LeftMenu({setting:this.setting});
+                    this.objDashboard = new Dashboard({setting:this.setting});
+                    this.objBreadCrumb = new BreadCrumb({setting:this.setting});
                     this.render();
                 }
                 ,

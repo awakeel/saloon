@@ -7,7 +7,8 @@ define(['backbone', 'underscore',  'text!dashboard/tpl/lists.html'],
                          },
 
 			initialize: function () {
-				this.template = _.template(template);				
+				this.template = _.template(template);		
+				this.setting = this.options.setting;
 				this.render();
 				 			
 			},

@@ -11,6 +11,7 @@ define(['backbone'], function (Backbone) {
 		idAttribute: "_id",
         initialize:function(){
                     
-          } 
+          } ,
+          url:'api/languagetranslate'
 	});
 });

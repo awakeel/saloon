@@ -1,8 +1,11 @@
  
                                            		<td><%=this.model.get('id')%></td>
                                                 <td><%=this.model.get('title')%></td>
-                                                <td><%=this.model.get('createdon')%></td>
-                                                <td><%=this.model.get('isdeleted')%></td>
-                                                <td><%=this.model.get('isactive')%></td>
+                                                <td><%=this.model.get('languagetitle')%></td> 
+                                                <td width="18%">
+                                                	<button class="btn btn-danger delete-token" data-id="<%=this.model.get('id')%>"> Delete </button>
+                                                	<button class="btn btn-info activate-token">Activate</button>
+                                                
+                                                </td>
                                            
                                            

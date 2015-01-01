@@ -10,8 +10,10 @@ define(['jquery', 'backbone', 'underscore',  'text!templates/leftmenu.html','vie
                         },
 
 			initialize: function () {
+				this.language = this.options.setting.language;
 				this.template = _.template(template);				
 				this.render();
+			 
 				 			
 			},
 			openWorkspace:function(ev){
@@ -20,8 +22,8 @@ define(['jquery', 'backbone', 'underscore',  'text!templates/leftmenu.html','vie
 			    var folder = this.checkUndefined($(ev.target).data('folder'));
 			    if(!folder){ $(ev.target).parent('li').data('folder')}
 			    require([folder+'/views/lists'],function(Lists){
-			    	var objLists = new Lists();
-			    	var objBreadCrumb = new BreadCrumb({title:title});
+			    	var objLists = new Lists({setting:that.options.setting});
+			    	var objBreadCrumb = new BreadCrumb({setting:that.options.setting});
 			    	$('#page-wrapper').find('.page-content').html(objBreadCrumb.$el);
 			    	$('#page-wrapper').find('.page-content').append(objLists.$el);
 			    })

@@ -27,7 +27,7 @@
                        }
     });
  
-  define(['backbone','views/main_container'],function(Backbone,Container){
+  define(['backbone','app','views/main_container'],function(Backbone,app,Container){
 	  var Router = Backbone.Router.extend({
 		  routes:{
 			  '':'dashboard'
@@ -35,15 +35,17 @@
 		  initialize:function(){
 			  this.dashboard();
 		  },
-		  dashboard:function(){
-			  var objContainer = new Container( );
+		  dashboard:function(){ 
+			  var settings = app.load(this.loadPages);
+		  },
+		  loadPages:function(){
+			  var objContainer = new Container({setting:app});
 			  $('#wrapper').append(objContainer.objHeader.$el);
 			  $('#wrapper').append(objContainer.objLeftMenu.$el);
 			  $('#wrapper').append(objContainer.$el);
 			  $('#page-wrapper').find('.page-content').html(objContainer.objBreadCrumb.$el);
 			  $('#page-wrapper').find('.page-content').append(objContainer.objDashboard.$el);
               $('#wrapper').append(objContainer.objFooter.$el);
-           //   this.mainContainer.dashBoardScripts()
 		  }
 		  
 	  });

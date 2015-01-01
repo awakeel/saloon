@@ -2,7 +2,6 @@
 session_start();
 require 'Slim/Slim.php';
 require 'classes/Language.php';
-
 $app = new Slim();
 // Section employees
 $app->get('/employees', function () {
@@ -11,25 +10,45 @@ $app->get('/employees', function () {
 		getEmployees($offset);
 	}
 });
-//$app->get('/employees', authorize('user'), 'getEmployees');
-$app->get('/employees/:id', authorize('user'),	'getEmployee');
-$app->get('/employees/:id/reports', authorize('user'),	'getReports');
-$app->get('/employees/search/:query', authorize('user'), 'getEmployeesByName');
-$app->get('/employees/modifiedsince/:timestamp', authorize('user'), 'findByModifiedDate');
-// Section Employee end
-
-//object of langauge class
-//$language_obj = new Language();
-//$language_obj->getLanguages(0);
 
 // Section language
 $app->get('/languages', function () {
-	if(authorize('user')){
-		$offset = $_GET['offset'];
+	if(authorize('user')){ 
                 $language_obj = new Language();
-		$language_obj->getLanguages($offset);
+		$language_obj->getLanguages(1);
 	}
 });
+ $app->get('/languagetranslate', function () {
+ 	    $fields = $_GET['specific'];
+ 	    $langugeid = $_GET['languageid'];
+ 	    if($fields == "0"){
+ 	    	if(authorize('user')){
+ 	    		$search = $_GET['search'];
+ 	    		$language_obj = new Language();
+ 	    		$language_obj->fetchLanguages($langugeid,$search);
+ 	    	}
+ 	    }else{
+ 	    	if(authorize('user')){
+ 	    		$language_obj = new Language();
+ 	    		$language_obj->fetchLanguagesSpecific($langugeid);
+ 	    	}	
+ 	    }
+ 		
+ });
+ $app->post('/languagetranslate', function () {
+ 	if(authorize('user')){
+ 		$language_obj = new Language();
+ 		$request = Slim::getInstance()->request(); 
+ 		$language_obj->saveLanguageTranslate($request);
+ 	}
+ });
+ $app->get('/deletelanguage',function(){
+ 	if(authorize('user')){
+ 		$language_obj = new Language();
+ 		$request = Slim::getInstance()->request();
+ 		$language_obj->deleteLanguageTranslate($_GET['id']);
+ 	}
+ });
 //$app->get('/employees', authorize('user'), 'getEmployees');
 //$app->get('/languages/:id', authorize('user'),	'getLanguage');
 //$app->get('/languages/:id/reports', authorize('user'),	'getReports');
@@ -256,4 +275,15 @@ function getConnection() {
 	$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	return $dbh;
 }
+
+//$app->get('/employees', authorize('user'), 'getEmployees');
+$app->get('/employees/:id', authorize('user'),	'getEmployee');
+$app->get('/employees/:id/reports', authorize('user'),	'getReports');
+$app->get('/employees/search/:query', authorize('user'), 'getEmployeesByName');
+$app->get('/employees/modifiedsince/:timestamp', authorize('user'), 'findByModifiedDate');
+// Section Employee end
+
+//object of langauge class
+//$language_obj = new Language();
+//$language_obj->getLanguages(0);
 ?>

@@ -9,12 +9,10 @@
 define(['backbone',  'language/models/language'], function (Backbone, ModelLanguage) {
 	'use strict';
 	return Backbone.Collection.extend({
-           urlRoot: '/api/language',
-           
+            
             model:ModelLanguage,
-            url: function () {
-                return 'api/language';
-            },
+            url: 'api/languagetranslate'
+           
            
              
 	});
