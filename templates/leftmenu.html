@@ -25,63 +25,65 @@
                     </li>
                     <!-- end SIDE NAV SEARCH -->
                     <!-- begin DASHBOARD LINK -->
-                    <li data-folder="dashboard" class="panel">
-                        <a class="active" data-folder="dashboard">
-                            <i class="fa fa-dashboard"></i> <%=this.language['dashboard']%>
-                        </a>
-                    </li>
+                    
+                       
                     <!-- end DASHBOARD LINK -->
                     <!-- begin CHARTS DROPDOWN -->
-                    <li data-folder="departments" class="panel">
-                        <a data-folder="departments">
-                            <i class="fa fa-bar-chart-o"></i> <%=this.language['department']%> 
+                    <li data-folder="dashboard" class="panel">
+			                        <a class="active" data-folder="dashboard" data-show='n'>
+			                            <i class="fa fa-dashboard" data-show='n'></i> <%=this.language['dashboard']%>
+			                        </a>
+		                    	</li>
+                     <li class="panel">
+                        <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#forms">
+                            <i class="fa fa-edit"></i> Management <i class="fa fa-caret-down"></i>
                         </a>
-                         
-                    </li>
-                    <!-- end CHARTS DROPDOWN -->
-                    <!-- begin FORMS DROPDOWN -->
-                    <li class="panel" data-folder="jobtypes">
-                        <a data-folder="jobtypes">
-                            <i class="fa fa-edit"></i> Job Types 
-                        </a>
-                        
-                    </li>
-                    <!-- end FORMS DROPDOWN -->
-                    <!-- begin CALENDAR LINK -->
-                    <li data-folder="services">
-                        <a data-folder="services">
-                            <i class="fa fa-calendar"></i> Services
-                        </a>
-                    </li>
-                    <!-- end CALENDAR LINK -->
-                    <!-- begin TABLES DROPDOWN -->
-                    <li class="panel" data-folder="employees">
-                        <a data-folder="employees">
-                            <i class="fa fa-table"></i> Employees  
-                        </a>
-                         
-                    </li>
-                    <!-- end TABLES DROPDOWN -->
-                    <!-- begin UI ELEMENTS DROPDOWN -->
-                    <li class="panel" data-folder="schedule">
-                        <a data-folder="schedule">
-                            <i class="fa fa-wrench"></i> Schedule  
-                        </a>
-                        
-                    </li>
-                     <li class="panel" data-folder="schedule">
+                        <ul class="collapse nav" id="forms">
+                           		
+	                            <li data-folder="branches"  >
+			                        <a data-folder="branches">
+			                            <i class="fa fa-bar-chart-o"></i> <%=this.language['departments']%> 
+			                        </a>
+			                         
+			                    </li>
+	                           	 <li  data-folder="jobtypes">
+			                        <a data-folder="jobtypes">
+			                            <i class="fa fa-edit"></i> Job Types 
+			                        </a>
+			                        
+			                    </li>
+			                        <li data-folder="services">
+			                        <a data-folder="services">
+			                            <i class="fa fa-calendar"></i> Services
+			                        </a>
+			                    </li>
+		                           <li  data-folder="employees">
+				                        <a data-folder="employees">
+				                            <i class="fa fa-table"></i> Employees  
+				                        </a>
+		                         
+		                    		</li>
+		                    		<li   data-folder="schedule">
+		                        <a data-folder="schedule">
+		                            <i class="fa fa-wrench"></i> Schedule  
+		                        </a>
+		                        
+		                    </li>
+                     <li data-folder="schedule">
                         <a data-folder="schedule">
                             <i class="fa fa-wrench"></i> Customers  
                         </a>
                         
                     </li>
-                     <li class="panel" data-folder="schedule">
+                     <li   data-folder="schedule">
                         <a data-folder="schedule">
                             <i class="fa fa-wrench"></i> Bookings  
                         </a>
                         
                     </li>
-                     <li class="panel" data-folder="schedule">
+                       </ul>
+                    </li>
+                   <li class="panel" data-folder="schedule">
                         <a data-folder="schedule">
                             <i class="fa fa-wrench"></i> Invoices  
                         </a>
@@ -105,12 +107,29 @@
                         </a>
                         
                     </li>
-                       <li class="panel" data-folder="language">
-                        <a data-folder="language">
+                    
+                    <li class="panel">
+                        <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#settings">
+                            <i class="fa fa-edit"></i> Settings <i class="fa fa-caret-down"></i>
+                        </a>
+                        <ul class="collapse nav" id="settings">
+                           		
+	                            <li  data-folder="language">
+                        <a href="#" data-folder="language">
                             <i class="fa fa-wrench"></i> Language   
                         </a>
                         
                     </li>
+                         <li  data-folder="language">
+                        <a href="#" data-folder="language">
+                            <i class="fa fa-wrench"></i> Currency   
+                        </a>
+                        
+                    </li>
+			                    </ul>
+			                    </li> 
+                    
+                      
                    
                     <!-- end PAGES DROPDOWN -->
                 </ul>

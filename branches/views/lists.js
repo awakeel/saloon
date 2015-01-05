@@ -1,52 +1,55 @@
-define(['text!jobtypes/tpl/lists.html','jobtypes/collections/jobtypes','jobtypes/views/list','jobtypes/models/jobtype'],
-	function (template,JobTypes,JobType,JobTypeModel) {
+define(['text!branches/tpl/lists.html','branches/collections/branches','branches/views/list','branches/models/branch'],
+	function (template,Branches,Branch,LanguageModel) {
 		'use strict';
 		return Backbone.View.extend({  
 			tagName:"div",
 			className:"col-lg-13",
 			events:{
-				"keyup #txtsearch":"searchjobtypes",
-				"click .close-p":"closePopup",
+			 	"click .close-p":"closePopup",
 				//"click .save-p":"saveToken",
-				"click .delete-p":"deleteToken"
+				"click .delete-p":"deleteToken",
+				"click .btn-add-new":"addNew"
 			},
             initialize: function () {
 				this.template = _.template(template);
 				this.request = null;
 				this.fetched = 0;
-				this.searchText = '';
+				 this.searchText = '';
 				this.setting = this.options.setting;
 				this.offsetLength = 10;
-				this.objJobTypes = new JobTypes();
+				this.objBranches = new Branches();
 				this.render();
 				
-			}, 
+			},
+			addNew:function(){
+				var that = this;
+			  	 require(['branches/views/addupdate'],function(addupdate){
+      		 	 	that.$el.html(new addupdate({id:0,model:{title:'',languagetitle:''},page:that}).$el);
+				 })
+			 
+		     },
 			render: function () { 
 				this.$el.html(this.template({}));
 				$(window).scroll(_.bind(this.lazyLoading, this));
                 $(window).resize(_.bind(this.lazyLoading, this));
-                this.fetchJobTypes();
-                //this.fillJobTypes();
+                this.fetchBranches();
                 var that = this;
                 var id = null;
                
                 
 			},
 			 
-			fetchJobTypes:function(){
+			fetchBranches:function(){
 				var that = this;
 				var _data = {}; 
-				/// _data['search'] = this.searchText;
-				// _data['specific'] = 0;
-				// _data['jobtypeid'] = that.jobtypeFilter;
-				// this.objjobtypes.reset();
+				  this.objBranches.reset();
 				 that.$el.find('tbody').empty();
 				 if(this.request)
 	                    this.request.abort();
-				 this.request = this.objJobTypes.fetch({data: _data, success: function(data) {
+				 this.request = this.objBranches.fetch({data: _data, success: function(data) {
 					_.each(data.models,function(model){
-						var objJobType = new JobType({model:model,page:that,setting:that.setting});
-						that.$el.find('tbody').append(objJobType.$el);
+						var objBranch = new Branch({model:model,page:that,setting:that.setting});
+						that.$el.find('tbody').append(objBranch.$el);
 					})
 					that.offsetLength = data.length;
 					that.fetched = that.fetched + data.length;
@@ -57,32 +60,29 @@ define(['text!jobtypes/tpl/lists.html','jobtypes/collections/jobtypes','jobtypes
                          
                     //} 
 					 var id = null;
-					 $(".btn-add-new").on('click',function(){ 
-						 require(['jobtype/views/addupdate'],function(addupdate){
-	           		 	 	that.$el.append(new addupdate({id:id,model:{title:'',jobtypetitle:''},page:that}).$el);
-						 })
-					 })
-				}}) 
+					 
+				}});
+				 console.log('I am clicked at list');
 				
 			},
-			fillJobTypes:function(){
-				 var url = "api/jobtypes";
+			fillLanguages:function(){
+				 var url = "api/languages";
 				 var that = this;
-				 var options = "<select value=0>Select jobtype</option>";
+				 var options = "<select value=0>Select language</option>";
                  jQuery.getJSON(url, function(tsv, state, xhr) {
-                     var jobtypes = jQuery.parseJSON(xhr.responseText);
-                     _.each(jobtypes,function(key){
+                     var languages = jQuery.parseJSON(xhr.responseText);
+                     _.each(languages,function(key){
                     	 var selected = "";
-                   	     if(that.setting.selectedjobtype == key.langaugeid)1
+                   	     if(that.setting.selectedLanguage == key.langaugeid)1
                    	     	selected = "selected";
                    	     
                     	  	options +="<option value="+key.id+" "+selected+">"+key.title+"</option>";
                     	  	
                      })
-                     that.$el.find(".ddljobtype").html(options);
-                     that.$el.find(".ddljobtype").on('change',function(ev){
-                    	 that.jobtypeFilter = $(this).val();
-                    	 that.fetchjobtypes();
+                     that.$el.find(".ddllanguage").html(options);
+                     that.$el.find(".ddllanguage").on('change',function(ev){
+                    	 that.languageFilter = $(this).val();
+                    	 that.fetchLanguages();
                      })
                  });
 			},
@@ -101,10 +101,10 @@ define(['text!jobtypes/tpl/lists.html','jobtypes/collections/jobtypes','jobtypes
                 if (inview.length && inview.attr("data-load") && this.$el.height() > 0) {
                     inview.removeAttr("data-load"); 
                     this.$el.find("#tr_loading").remove();
-                    this.fetchJobTypes(this.offsetLength);
+                    this.fetchLanguages(this.offsetLength);
                 }
             },
-            searchjobtypes:function(ev){ 
+            searchLanguages:function(ev){ 
                      this.searchText = ''; 
                      this.timer = 0;
                      var that = this;
@@ -118,7 +118,7 @@ define(['text!jobtypes/tpl/lists.html','jobtypes/collections/jobtypes','jobtypes
                           if(code == 8 || code == 46){
                                  if(text){ 
 		                        	 that.searchText = text;
-			                          that.fetchjobtypes();
+			                          that.fetchLanguages();
 		                         }
                            }else{
 		                   
@@ -127,22 +127,22 @@ define(['text!jobtypes/tpl/lists.html','jobtypes/collections/jobtypes','jobtypes
 		                            that.timer = setTimeout(function() { // assign timer a new timeout 
 		                                if (text.length < 2) return;
 		                                that.searchText = text;
-		                                that.fetchjobtypes(that.langaugeFilter);
+		                                that.fetchLanguages(that.langaugeFilter);
 		                           }, 500); // 2000ms delay, tweak for faster/slower
                           }
             },
             saveToken:function(title,translate,view){
             	 
-            	var objjobtype = new jobtypeModel();
-            	objjobtype.set('jobtypeid',this.jobtypeFilter);
-            	objjobtype.set('title',title);
-            	objjobtype.set('jobtypetitle',translate);
-            	var model = objjobtype.save(); 
-            	this.objjobtypes.add(objjobtype);  
-                var last_model = this.objjobtypes.last();
+            	var objLanguage = new LanguageModel();
+            	objLanguage.set('languageid',this.languageFilter);
+            	objLanguage.set('title',title);
+            	objLanguage.set('languagetitle',translate);
+            	var model = objLanguage.save(); 
+            	this.objLanguages.add(objLanguage);  
+                var last_model = this.objLanguages.last();
                 //this.closePopup();
-                var objjobtype = new jobtype({model:objjobtype,page:this,setting:this.setting});
-				this.$el.find('tbody').prepend(objjobtype.$el);
+                var objLanguage = new Language({model:objLanguage,page:this,setting:this.setting});
+				this.$el.find('tbody').prepend(objLanguage.$el);
 				view.closeView();
 				this.setting.successMessage();
             }

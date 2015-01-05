@@ -1,4 +1,4 @@
-define(['text!language/tpl/list.html','app'],
+define(['text!branches/tpl/list.html','app'],
 	function (template,app) {
 		'use strict';
 		return Backbone.View.extend({  
@@ -21,7 +21,7 @@ define(['text!language/tpl/list.html','app'],
 			deleteToken:function(ev){
 				var that = this;
             	var id = $(ev.target).data('id'); 
-                var URL = "api/deletelanguage";
+                var URL = "api/deletebranch";
                 $.get(URL, {id:id})
                         .done(function(data) {
                              var _json = jQuery.parseJSON(data);

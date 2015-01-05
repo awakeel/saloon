@@ -12,7 +12,7 @@ define(['jquery', 'backbone','views/breadcrumb',  'views/header','dashboard/view
                     this.objFooter = new FooterView({setting:this.setting});
                     this.objLeftMenu = new LeftMenu({setting:this.setting});
                     this.objDashboard = new Dashboard({setting:this.setting});
-                    this.objBreadCrumb = new BreadCrumb({setting:this.setting});
+                    this.objBreadCrumb = new BreadCrumb({title:'dashboard',setting:this.setting});
                     this.render();
                 }
                 ,

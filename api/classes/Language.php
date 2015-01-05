@@ -2,10 +2,41 @@
 class Language
 {
     public $offset = 0;
-
+	public $app = null;
     // method declaration
+    function __construct($app){
+    	// Section language
+    	 
+    	$app->get('/languages', function () {
+    		  	 $this->getLanguages(1); 
+    	});
+    	$app->get('/languagetranslate', function () {
+    		$fields = $_GET['specific'];
+    		$langugeid = $_GET['languageid'];
+    		if($fields == "0"){
+    			 	$search = $_GET['search'];
+    				 $this->fetchLanguages($langugeid,$search); 
+    		}else{
+    			 	$this->fetchLanguagesSpecific($langugeid);
+    			 
+    		}
+    			
+    	});
+    	$app->post('/languagetranslate', function () {
+    	        $request = Slim::getInstance()->request();
+    			$this->saveLanguageTranslate($request);
+    		 
+    	});
+    	$app->get('/deletelanguage',function(){
+    		 
+    			
+    			$request = Slim::getInstance()->request();
+    			$this->deleteLanguageTranslate($_GET['id']);
+    		 
+    	});
+    }
     function getLanguages( ) {  
-        $sql = "select * from language  ";
+        $sql = "select * from language";
             try {
                     $db = getConnection();
                     $stmt = $db->query($sql);
@@ -14,14 +45,14 @@ class Language
 
             // Include support for JSONP requests
             if (!isset($_GET['callback'])) {
-                echo json_encode($languages);
+                echo json_encode($languages,true);
             } else {
-                echo $_GET['callback'] . '(' . json_encode($languages) . ');';
+                echo $_GET['callback'] . '(' . json_encode($languages,true) . ');';
             }
 
             } catch(PDOException $e) {
                     $error = array("error"=> array("text"=>$e->getMessage()));
-                    echo json_encode($error);
+                    echo json_encode($error,true);
             }
     }
     function fetchLanguagesSpecific($languageid) { 
@@ -75,22 +106,42 @@ class Language
     function saveLanguageTranslate($request){
     	 
     		$params = json_decode($request->getBody());
-    		$sql = "INSERT INTO languagetranslate (languageid, title,languagetitle) ";
-    		$sql .="VALUES (:languageid, :title,  :languagetitle)";
-    		try {
-    			$db = getConnection();
-    			$stmt = $db->prepare($sql);
-    			$stmt->bindParam("languageid", $params->languageid);
-    			$stmt->bindParam("title", $params->title);
-    			$stmt->bindParam("languagetitle", $params->languagetitle); 
-    	
-    			$stmt->execute();
-    			$params->id = $db->lastInsertId();
-    			$db = null;
-    			echo json_encode($params);
-    		} catch(PDOException $e) {
-    			//error_log($e->getMessage(), 3, '/var/tmp/php.log');
-    			echo '{"error":{"text":'. $e->getMessage() .'}}';
+    		if(@$params->id){
+    			$sql = "update languagetranslate set languageid=:languageid, title=:title,languagetitle=:languagetitle  ";
+    			$sql .=" where id=:id";
+    			try {
+    				$db = getConnection();
+    				$stmt = $db->prepare($sql);
+    				$stmt->bindParam("languageid", $params->languageid);
+    				$stmt->bindParam("title", $params->title);
+    				$stmt->bindParam("languagetitle", $params->languagetitle);
+    				$stmt->bindParam("id", $params->id);
+    				$stmt->execute();
+    				 
+    				$db = null;
+    				echo json_encode($params);
+    			 } catch(PDOException $e) {
+    				//error_log($e->getMessage(), 3, '/var/tmp/php.log');
+    				echo '{"error":{"text":'. $e->getMessage() .'}}';
+    			}
+    		}else{
+		    		$sql = "INSERT INTO languagetranslate (languageid, title,languagetitle) ";
+		    		$sql .="VALUES (:languageid, :title,  :languagetitle)";
+		    		try {
+		    			$db = getConnection();
+		    			$stmt = $db->prepare($sql);
+		    			$stmt->bindParam("languageid", $params->languageid);
+		    			$stmt->bindParam("title", $params->title);
+		    			$stmt->bindParam("languagetitle", $params->languagetitle); 
+		    	
+		    			$stmt->execute();
+		    			$params->id = $db->lastInsertId();
+		    			$db = null;
+		    			echo json_encode($params);
+		    		} catch(PDOException $e) {
+		    			//error_log($e->getMessage(), 3, '/var/tmp/php.log');
+		    			echo '{"error":{"text":'. $e->getMessage() .'}}';
+		    		}
     		}
     	 
     }

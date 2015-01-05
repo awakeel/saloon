@@ -7,8 +7,9 @@ define(['text!language/tpl/lists.html','language/collections/languages','languag
 			events:{
 				"keyup #txtsearch":"searchLanguages",
 				"click .close-p":"closePopup",
-				"click .save-p":"saveToken",
-				"click .delete-p":"deleteToken"
+				//"click .save-p":"saveToken",
+				"click .delete-p":"deleteToken",
+				"click .btn-add-new":"addNew"
 			},
             initialize: function () {
 				this.template = _.template(template);
@@ -31,6 +32,9 @@ define(['text!language/tpl/lists.html','language/collections/languages','languag
                 $(window).resize(_.bind(this.lazyLoading, this));
                 this.fetchLanguages();
                 this.fillLanguages();
+                var that = this;
+                var id = null;
+               
                 
 			},
 			 
@@ -57,7 +61,17 @@ define(['text!language/tpl/lists.html','language/collections/languages','languag
                        // that.$el.find("tbody").append("<tr id='tr_loading'><td colspan='6'><div class='gridLoading fa fa-spinner spinner' style='text-align:center; margin-left:auto;'></div></td>");
                          
                     //} 
+					 var id = null;
+					
 				}}) 
+				
+			},
+			addNew:function(){
+				var that = this;
+				  	 require(['language/views/addupdate'],function(addupdate){
+           		 	 	that.$el.append(new addupdate({id:id,model:{title:'',languagetitle:''},page:that}).$el);
+					 })
+				 
 			},
 			fillLanguages:function(){
 				 var url = "api/languages";
@@ -125,20 +139,20 @@ define(['text!language/tpl/lists.html','language/collections/languages','languag
 		                           }, 500); // 2000ms delay, tweak for faster/slower
                           }
             },
-            saveToken:function(){
+            saveToken:function(title,translate,view){
             	 
-            	var title = this.$el.find("#txttitle").val();
-            	var translate = this.$el.find("#txttranslate").val();
             	var objLanguage = new LanguageModel();
             	objLanguage.set('languageid',this.languageFilter);
             	objLanguage.set('title',title);
             	objLanguage.set('languagetitle',translate);
-            	objLanguage.save(); 
+            	var model = objLanguage.save(); 
             	this.objLanguages.add(objLanguage);  
                 var last_model = this.objLanguages.last();
                 //this.closePopup();
-                var objLanguage = new Language({model:objLanguage});
+                var objLanguage = new Language({model:objLanguage,page:this,setting:this.setting});
 				this.$el.find('tbody').prepend(objLanguage.$el);
+				view.closeView();
+				this.setting.successMessage();
             }
            
             

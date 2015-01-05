@@ -2,30 +2,31 @@ define(['jquery', 'backbone', 'underscore',  'text!templates/leftmenu.html','vie
 	function ($, Backbone, _,   template,BreadCrumb) {
 		'use strict';
 		return Backbone.View.extend({
-			id: 'footer',
-                        tagName: 'footer',
-                        className:"clearfix",
-                        events: {
-                           'click .navbar-side li':'openWorkspace'
-                        },
+			 
+                tagName: 'footer',
+                className:"clearfix",
+                events: {
+                   'click .navbar-side li':'openWorkspace'
+                },
 
 			initialize: function () {
 				this.language = this.options.setting.language;
 				this.template = _.template(template);				
 				this.render();
-			 
 				 			
 			},
 			openWorkspace:function(ev){
 				var that = this;
 				var title = $(ev.target).text();
 			    var folder = this.checkUndefined($(ev.target).data('folder'));
-			    if(!folder){ $(ev.target).parent('li').data('folder')}
+			    var show = this.checkUndefined($(ev.target).data('show'));
+			    if(!folder){ folder = $(ev.target).parent('li').data('folder')}
 			    require([folder+'/views/lists'],function(Lists){
 			    	var objLists = new Lists({setting:that.options.setting});
-			    	var objBreadCrumb = new BreadCrumb({setting:that.options.setting});
-			    	$('#page-wrapper').find('.page-content').html(objBreadCrumb.$el);
-			    	$('#page-wrapper').find('.page-content').append(objLists.$el);
+			    	var objBreadCrumb = new BreadCrumb({title:folder,setting:that.options.setting,show:show});
+			    	$('#page-wrapper').find('.page-content').html(objLists.$el);
+			    	$('#page-wrapper').find('.page-content').prepend(objBreadCrumb.$el);
+			    	
 			    })
 			},
 			render: function () {

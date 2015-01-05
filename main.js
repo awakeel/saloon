@@ -11,8 +11,13 @@
            text:'libs/text',
            'moment': 'libs/moment',
            'bootstrap': 'libs/bootstrap.min',
+           'flex': 'js/flex',
+           'wizard':'libs/wizard'
            },
         shim: {
+        	  jquery: {
+                  exports: 'jQuery'
+              },
                 backbone: {
                    deps: ['jquery', 'underscore'],
                    exports: 'Backbone'
@@ -20,14 +25,20 @@
                 underscore: {
                    exports: '_'
                 },
-                jquery: {
-                   exports: 'jQuery'
-               },
+                flex: {
+                	deps: ['jquery'],
+                    exports: 'flex'
+                 },
+                 wizard: {
+                 	deps: ['jquery'],
+                     exports: 'wizard'
+                  },
+              
                bootstrap: ['jquery']
                        }
     });
  
-  define(['backbone','app','views/main_container'],function(Backbone,app,Container){
+  define(['jquery','bootstrap','backbone','app','flex','views/main_container'],function(jquery,bootstrap,Backbone,app,flex,Container){
 	  var Router = Backbone.Router.extend({
 		  routes:{
 			  '':'dashboard'

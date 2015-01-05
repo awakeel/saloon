@@ -6,22 +6,21 @@ define([ 'backbone', 'underscore',  'text!templates/breadcrumb.html'],
 			initialize: function () {
 				 this.language = this.options.setting.language
 				this.template = _.template(template); 
+				 this.title = this.options.title;
 				this.render();
 				 			
 			},
 			render: function () {
-				this.$el.html(this.template({}));
-				this.$el.find(".btn-add-new").on('click',function(){
-					console.log('I am clicked');
-					$('#popup').show();
-				})
+				var that = this;
+				this.$el.html(this.template({})); 
 			},
 			getCurrentDate:function(){
 				var date = moment(new Date()).format("YYYY-MM-DD hh:mm:ss");
 				return date;
 			},
 			addNewButton:function(){
-				return '<button class="btn btn-success btn-lg pull-right btn-add-new">'+this.options.setting.language["add"]+'</button>';
+			//	if(this.options.show !="n")
+				//return '<button class="btn btn-success btn-lg pull-right btn-add-new">'+this.options.setting.language["add"]+'</button>';
 				
 			}
 		});

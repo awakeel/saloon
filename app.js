@@ -1,4 +1,4 @@
-define(['language/collections/languages'], function (Language) {
+define(['jquery','language/collections/languages'], function (jquery,Language) {
     'use strict';
     var app = Backbone.Model.extend({
         load: function (callback) {

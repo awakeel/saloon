@@ -1,8 +1,18 @@
 <?php
 session_start();
-require 'Slim/Slim.php';
-require 'classes/Language.php';
+$path =  dirname(__FILE__) ; 
+require $path .'/Slim/Slim.php';
+require $path.'/classes/Language.php';
+require $path .'/classes/JobTypes.php';
+require $path .'/classes/Branches.php';
+require $path .'/classes/Services.php';
+require $path .'/classes/Common.php';
 $app = new Slim();
+$objLanguages = new Language($app);
+$objJobTypes = new JobTypes($app);
+$objServices = new Services($app);
+$objCommon = new Common($app);
+$objBranches = new Branches($app);
 // Section employees
 $app->get('/employees', function () {
 	if(authorize('user')){
@@ -11,44 +21,7 @@ $app->get('/employees', function () {
 	}
 });
 
-// Section language
-$app->get('/languages', function () {
-	if(authorize('user')){ 
-                $language_obj = new Language();
-		$language_obj->getLanguages(1);
-	}
-});
- $app->get('/languagetranslate', function () {
- 	    $fields = $_GET['specific'];
- 	    $langugeid = $_GET['languageid'];
- 	    if($fields == "0"){
- 	    	if(authorize('user')){
- 	    		$search = $_GET['search'];
- 	    		$language_obj = new Language();
- 	    		$language_obj->fetchLanguages($langugeid,$search);
- 	    	}
- 	    }else{
- 	    	if(authorize('user')){
- 	    		$language_obj = new Language();
- 	    		$language_obj->fetchLanguagesSpecific($langugeid);
- 	    	}	
- 	    }
- 		
- });
- $app->post('/languagetranslate', function () {
- 	if(authorize('user')){
- 		$language_obj = new Language();
- 		$request = Slim::getInstance()->request(); 
- 		$language_obj->saveLanguageTranslate($request);
- 	}
- });
- $app->get('/deletelanguage',function(){
- 	if(authorize('user')){
- 		$language_obj = new Language();
- 		$request = Slim::getInstance()->request();
- 		$language_obj->deleteLanguageTranslate($_GET['id']);
- 	}
- });
+
 //$app->get('/employees', authorize('user'), 'getEmployees');
 //$app->get('/languages/:id', authorize('user'),	'getLanguage');
 //$app->get('/languages/:id/reports', authorize('user'),	'getReports');
@@ -267,7 +240,7 @@ function getModifiedEmployees($modifiedSince) {
 //}
 
 function getConnection() {
-	$dbhost="127.0.0.1";
+	$dbhost="localhost";
 	$dbuser="root";
 	$dbpass="";
 	$dbname="franchise";
