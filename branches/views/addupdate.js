@@ -1,5 +1,5 @@
-define(['text!branches/tpl/addupdate.html','wizard'],
-	function (template,wizard) {
+define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch'],
+	function (template,wizard,ModelBranch) {
 		'use strict';
 		return Backbone.View.extend({  
 			 events:{
@@ -9,6 +9,8 @@ define(['text!branches/tpl/addupdate.html','wizard'],
 			 id:"rootwizard",
 			  initialize: function () {
 				this.template = _.template(template);
+				this.setting = this.options.setting;
+				this.objModelBranch = new ModelBranch();
 				this.render();
 			},
 			render: function () {  
@@ -19,6 +21,8 @@ define(['text!branches/tpl/addupdate.html','wizard'],
 				this.fillCountries();
 				this.fillCurrencies();
 				this.fillTimings();
+				this.fillServices();
+				this.fillEmployees();
 			},
 			closeView:function(){
 				
@@ -41,18 +45,60 @@ define(['text!branches/tpl/addupdate.html','wizard'],
 					// If it's the last tab then hide the last button and show the finish instead
 					if($current >= $total) {
 						that.$el.find('.pager .next').hide();
-						that.$el.find('.pager .finish').show();
+						that.$el.find('.pager .finish').show().on('click',function(){
+							console.log('some one clicked me');
+						});
 						that.$el.find('.pager .finish').removeClass('disabled');
 					} else {
 						that.$el.find('.pager .next').show();
 						that.$el.find('.pager .finish').hide();
 					}
+					 
 					
+					
+				} ,onNext:function(tab, nav, index){
+					var id = tab.data('id');
+					switch(id){
+					case 1:
+						that.saveBasicInfo();
+						break;
+					case 2:
+						that.saveBasicSetting();
+						break;
+					case 3:
+						that.saveJobTypes();
+						break;
+					case 4:
+						that.saveServices();
+						break;
+					case 5:
+						that.saveEmployees();
+						break;
+				}
 				}});
-				that.$el.find('finish').click(function() {
-					alert('Finished!, Starting over!');
-					that.$el.find("a[href*='tab1']").trigger('click');
-				});
+			
+			},
+			saveBasicInfo:function(){
+				var name = this.$el.find('#txtname').val();
+				var desc = this.$el.find('#txtdescription').val();
+				this.objModelBranch.set({name:name,notes:desc});
+				this.objModelBranch.save();
+			},
+			saveBasicSetting:function(){
+				var countryid = this.$el.find('#ddlcountries').val();
+				var currencyid = this.$el.find('#ddlcurrencies').val();
+				var languageid = this.$el.find("#ddllanguage").val();
+				this.objModelBranch.set({id:this.objModelBranch.get('id'),countryid:countryid,currencyid:currencyid,languageid:languageid});
+				this.objModelBranch.save();
+			},
+			saveJobTypes:function(){
+				
+			},
+			saveServices:function(){
+				
+			},
+			saveEmployees:function(){
+				
 			},
 			fillCountries:function(){
 				var url = "api/countries";
@@ -97,21 +143,18 @@ define(['text!branches/tpl/addupdate.html','wizard'],
                });
 			},
 			fillJobTypes:function(){
-				 var url = "api/jobtypes";
-				 var that = this;
-				 var options = "<select value=0>Select language</option>";
-                 jQuery.getJSON(url, function(tsv, state, xhr) {
-                     var jobtypes = jQuery.parseJSON(xhr.responseText);
-                     _.each(jobtypes,function(key){
-                    	  	options +="<option value="+key.id+"  >"+key.name+"</option>";
-                    	  	
-                     })
-                     that.$el.find("#ddljobtypes").html(options);
-                     
-                 });
+				var that = this;
+				require(['jobtypes/views/lists'],function(JobTypes){
+					var objJobTypes = new JobTypes({setting:that.setting});
+					that.$el.find(".table-jobtypes").html(objJobTypes.$el);
+				})
 			},
 			fillServices:function(){
-				
+				var that = this;
+				require(['services/views/lists'],function(Services){
+					var objServices = new Services({setting:that.setting});
+					that.$el.find(".table-services").html(objServices.$el);
+				})
 			},
 			fillLanguages:function(){
 				 var url = "api/languages";
@@ -126,6 +169,13 @@ define(['text!branches/tpl/addupdate.html','wizard'],
                      that.$el.find("#ddllanguage").html(options);
                      
                  });
+			},
+			fillEmployees:function(){
+				var that = this;
+				require(['employees/views/lists'],function(Employees){
+					var objEmployees = new Employees({setting:that.setting});
+					that.$el.find(".table-employees").html(objEmployees.$el);
+				})
 			}
 		 
 		});

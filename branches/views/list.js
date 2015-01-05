@@ -33,7 +33,7 @@ define(['text!branches/tpl/list.html','app'],
                             	  });  
                             }
                             else {
-                            	
+                            	that.setting.errorMessage();
                             }
                         });
                  },

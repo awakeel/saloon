@@ -1,19 +1,23 @@
 <?php
-class Branches
+class Employees
 { 
 
     // method declaration
     function __construct($app){
-	    	$app->get('/branches', function () {
-	    		$this->getAllByFranchise(1);
-	    	});
-    		$app->post('/branches', function () {
+    	$app->get('/employees', function () {
+    		$this->getAllByBranchId(1);
+    	});
+    	$app->post('/employees',function(){
+    		$request = Slim::getInstance()->request();
+    		$this->saveEmployee($request);
+    	});
+    		$app->get('/deleteemployees',function(){
     			$request = Slim::getInstance()->request();
-    			$this->saveBranches($request);
+    			$this->deleteEmployee($request);
     		});
     }
     function getAll( ) {  
-        $sql = "select * from branches";
+        $sql = "select * from employees";
             try {
                     $db = getConnection();
                     $stmt = $db->query($sql);
@@ -32,22 +36,22 @@ class Branches
                     echo json_encode($error);
             }
     }
-    function getAllByFranchise($franchiseid) { 
+    function getAllByBranchId($branchId) { 
           
-        $sql = "select * from branches where franchiseid = :franchiseid  ";
+        $sql = "select * from employees where branchid = :branchid";
             try {
                     $db = getConnection();
                     $stmt = $db->prepare($sql);
-                    $stmt->bindParam("franchiseid", $franchiseid);
+                    $stmt->bindParam("branchid", $branchId);
                     $stmt->execute();
-                    $departments = $stmt->fetchAll(PDO::FETCH_OBJ);
+                    $employees = $stmt->fetchAll(PDO::FETCH_OBJ);
                     $db = null;
 
             // Include support for JSONP requests
             if (!isset($_GET['callback'])) {
-                echo json_encode($departments);
+                echo json_encode($employees);
             } else {
-                echo $_GET['callback'] . '(' . json_encode($departments) . ');';
+                echo $_GET['callback'] . '(' . json_encode($employees) . ');';
             }
 
             } catch(PDOException $e) {
@@ -56,18 +60,16 @@ class Branches
             }
     }
      
-    function saveBranches($request){
+    function saveEmployee($request){
     	 
     		$params = json_decode($request->getBody());
     		if(@$params->id){
-    			$sql = "update branches set languageid=:l, currencyid=:c,countryid=:ct";
+    			$sql = "update employees ";
     			$sql .=" where id=:id";
     			try {
     				$db = getConnection();
     				$stmt = $db->prepare($sql);
-    				$stmt->bindParam("l", $params->languageid);
-    				$stmt->bindParam("c", $params->currencyid);
-    				$stmt->bindParam("ct", $params->countryid);
+    				 
     				$stmt->bindParam("id", $params->id);
     				$stmt->execute();
     				 
@@ -78,13 +80,20 @@ class Branches
     				echo '{"error":{"text":'. $e->getMessage() .'}}';
     			}
     		}else{
-		    		$sql = "INSERT INTO branches (name, notes,franchiseid) ";
-		    		$sql .="VALUES (:name, :notes , 1)";
+		    		$sql = "INSERT INTO employees (firstname, lastname,phone,email,password,address,about,branchid,type) ";
+		    		$sql .="VALUES (:f, :l , :p,:e,:pas,:add,:about,:branchid,:type)";
 		    		try {
 		    			$db = getConnection();
 		    			$stmt = $db->prepare($sql);
-		    			$stmt->bindParam("name", $params->name);
-		    			$stmt->bindParam("notes", $params->notes); 
+		    			$stmt->bindParam("f", $params->firstname);
+		    			$stmt->bindParam("l", $params->lastname);
+		    			$stmt->bindParam("p", $params->phone);
+		    			$stmt->bindParam("e", $params->email);
+		    			$stmt->bindParam("pas", $params->password);
+		    			$stmt->bindParam("add", $params->address);
+		    			$stmt->bindParam("about", $params->about);
+		    			$stmt->bindParam("branchid", $params->branchid); 
+		    			$stmt->bindParam("type", $params->type);
 		    	
 		    			$stmt->execute();
 		    			$params->id = $db->lastInsertId();
@@ -97,9 +106,9 @@ class Branches
     		}
     	 
     }
-    function deleteLanguageTranslate($id){
-    	 
-    	$sql = "delete from branches where id=:id ";
+    function deleteEmployee(){
+    	 $id = $_GET['id'];
+    	$sql = "delete from employees where id=:id ";
     	 
     	try {
     		$db = getConnection();

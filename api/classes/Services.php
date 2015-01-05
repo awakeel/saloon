@@ -7,6 +7,14 @@ class Services
     	$app->get('/services', function () {
     		$this->getAllByBranchId(1);
     	});
+    	$app->post('/services',function(){
+    		$request = Slim::getInstance()->request();
+    		$this->saveService($request);
+    	});
+    		$app->get('/deleteservices',function(){
+    			$request = Slim::getInstance()->request();
+    			$this->deleteService($request);
+    		});
     }
     function getAll( ) {  
         $sql = "select * from branches";
@@ -30,7 +38,7 @@ class Services
     }
     function getAllByBranchId($branchId) { 
           
-        $sql = "select * from services where branchid = :  ";
+        $sql = "select * from services where branchid = :branchid  ";
             try {
                     $db = getConnection();
                     $stmt = $db->prepare($sql);
@@ -51,56 +59,55 @@ class Services
                     echo json_encode($error);
             }
     }
-     
-    function saveLanguageTranslate($request){
-    	 
-    		$params = json_decode($request->getBody());
-    		if(@$params->id){
-    			$sql = "update branches ";
-    			$sql .=" where id=:id";
-    			try {
-    				$db = getConnection();
-    				$stmt = $db->prepare($sql);
-    				 
-    				$stmt->bindParam("id", $params->id);
-    				$stmt->execute();
-    				 
-    				$db = null;
-    				echo json_encode($params);
-    			 } catch(PDOException $e) {
-    				//error_log($e->getMessage(), 3, '/var/tmp/php.log');
-    				echo '{"error":{"text":'. $e->getMessage() .'}}';
-    			}
-    		}else{
-		    		$sql = "INSERT INTO branches (name, notes,franchiseid) ";
-		    		$sql .="VALUES (:name, :notes , 1)";
-		    		try {
-		    			$db = getConnection();
-		    			$stmt = $db->prepare($sql);
-		    			$stmt->bindParam("name", $params->languageid);
-		    			$stmt->bindParam("notes", $params->title);
-		    			$stmt->bindParam("franchiseid", $params->languagetitle); 
-		    	
-		    			$stmt->execute();
-		    			$params->id = $db->lastInsertId();
-		    			$db = null;
-		    			echo json_encode($params);
-		    		} catch(PDOException $e) {
-		    			//error_log($e->getMessage(), 3, '/var/tmp/php.log');
-		    			echo '{"error":{"text":'. $e->getMessage() .'}}';
-		    		}
+    function saveService($request){
+    
+    	$params = json_decode($request->getBody());
+    	if(@$params->id){
+    		$sql = "update services ";
+    		$sql .=" where id=:id";
+    		try {
+    			$db = getConnection();
+    			$stmt = $db->prepare($sql);
+    				
+    			$stmt->bindParam("id", $params->id);
+    			$stmt->execute();
+    				
+    			$db = null;
+    			echo json_encode($params);
+    		} catch(PDOException $e) {
+    			//error_log($e->getMessage(), 3, '/var/tmp/php.log');
+    			echo '{"error":{"text":'. $e->getMessage() .'}}';
     		}
-    	 
+    	}else{
+    		$sql = "INSERT INTO services (name, comments,branchid) ";
+    		$sql .="VALUES (:name, :comments , :branchid)";
+    		try {
+    			$db = getConnection();
+    			$stmt = $db->prepare($sql);
+    			$stmt->bindParam("name", $params->name);
+    			$stmt->bindParam("comments", $params->comments);
+    			$stmt->bindParam("branchid", $params->branchid);
+    		  
+    			$stmt->execute();
+    			$params->id = $db->lastInsertId();
+    			$db = null;
+    			echo json_encode($params);
+    		} catch(PDOException $e) {
+    			//error_log($e->getMessage(), 3, '/var/tmp/php.log');
+    			echo '{"error":{"text":'. $e->getMessage() .'}}';
+    		}
+    	}
+    
     }
-    function deleteLanguageTranslate($id){
-    	 
-    	$sql = "delete from branches where id=:id ";
-    	 
+    function deleteService(){
+    	$id = $_GET['id'];
+    	$sql = "delete from services where id=:id ";
+    
     	try {
     		$db = getConnection();
     		$stmt = $db->prepare($sql);
     		$stmt->bindParam("id", $id);
-    		$stmt->execute(); 
+    		$stmt->execute();
     		$db = null;
     		echo json_encode($id);
     	} catch(PDOException $e) {

@@ -1,127 +1,149 @@
- 
-	<ul>
-	  	<li><a href="#tab1" data-toggle="tab"><span class="label">1</span> Basic Info</a></li>
-		<li><a href="#tab2" data-toggle="tab"><span class="label">2</span> Basic Settings</a></li>
-		<li><a href="#tab3" data-toggle="tab"><span class="label">3</span> Add Services </a></li>
-		<li><a href="#tab4" data-toggle="tab"><span class="label">4</span> Add Employees</a></li> 
-	</ul>
-	<div class="tab-content">
-	    <div class="tab-pane" id="tab1">
-			<form class="form-horizontal">
-				<fieldset>
-	
-					<!-- Form Name -->
-					<legend> </legend>
-	
-					<!-- Text input-->
-					<div class="form-group">
-						<label class="col-md-4 control-label" for="txtname">Name</label>
-						<div class="col-md-5">
-							<input id="txtname" name="txtname" type="text"
-								placeholder="department name e.g xyz hair saloon"
-								class="form-control input-md" required="">
-	
+
+<ul>
+	<li data-id="1"><a href="#tab1" data-toggle="tab"><span class="label">1</span>
+			Basic Info</a></li>
+	<li data-id="2"> <a href="#tab2" data-toggle="tab"><span class="label">2</span>
+			Basic Settings</a></li>
+	<li data-id="3"><a href="#tab3" data-toggle="tab"><span class="label">3</span>
+			Add Job Types </a></li>
+	<li data-id="4"><a href="#tab4" data-toggle="tab"><span class="label">4</span>
+			Add Services</a></li>
+	<li data-id="5"><a href="#tab5" data-toggle="tab"><span class="label">5</span>
+			Add Employees</a></li>
+</ul>
+<div class="tab-content">
+	<div class="tab-pane" id="tab1">
+		<form class="form-horizontal">
+			<fieldset>
+
+				<!-- Form Name -->
+				<legend> </legend>
+
+				<!-- Text input-->
+				<div class="form-group">
+					<label class="col-md-4 control-label" for="txtname">Name</label>
+					<div class="col-md-5">
+						<input id="txtname" name="txtname" type="text"
+							placeholder="department name e.g xyz hair saloon"
+							class="form-control input-md" required="">
+
+					</div>
+				</div>
+				<!-- Textarea -->
+				<div class="form-group">
+					<label class="col-md-4 control-label" for="txtdescription">Description</label>
+					<div class="col-md-5">
+						<textarea class="form-control" id="txtdescription"
+							name="txtdescription">Description</textarea>
+					</div>
+				</div>
+			</fieldset>
+		</form>
+	</div>
+	<div class="tab-pane" id="tab2">
+		<form class="form-horizontal">
+			<fieldset>
+				<legend> </legend>
+				<div class="form-group">
+					<label class="col-md-4 control-label" for="ddlcountries">Countries</label>
+					<div class="col-md-4">
+						<select id="ddlcountries" name="ddlcountries" class="form-control">
+							<option value="1">Select countries</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-4 control-label" for="ddlcurrencies">
+						Currencies</label>
+					<div class="col-md-4">
+						<select id="ddlcurrencies" name="ddlcurrencies"
+							class="form-control">
+							<option value="1">Select Currencies</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-4 control-label" for="ddllanguage">
+						Language</label>
+					<div class="col-md-4">
+						<select id="ddllanguage" name="ddllanguage" class="form-control">
+							<option value="1">Select Language</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-4 control-label" for="ddltiming">
+						Timing</label>
+					<div class="col-md-4">
+						<select id="ddltimings" name="ddltimings" class="form-control">
+							<option value="1">Select Timing</option>
+						</select>
+					</div>
+				</div>
+
+			</fieldset>
+		</form>
+
+	</div>
+	<div class="tab-pane" id="tab3">
+		<form class="form-horizontal">
+			<fieldset>
+				<legend> </legend>
+				<div class="form-group">
+					<label class="col-md-8 control-label" for="txtjobtype"> </label>
+					<div class="col-md-8">
+					  
+						<div class="table-jobtypes">
+							 
 						</div>
 					</div>
-					<!-- Textarea -->
-					<div class="form-group">
-					  <label class="col-md-4 control-label" for="txtdescription">Description</label>
-					  <div class="col-md-5">                     
-					    <textarea class="form-control" id="txtdescription" name="txtdescription">Description</textarea>
-					  </div>
-					</div>	
-				</fieldset>
-			</form>
-		</div>
-	    <div class="tab-pane" id="tab2">
-	        <form class="form-horizontal">
-				<fieldset>
-				<legend> </legend>
-			               <div class="form-group">
-							<label class="col-md-4 control-label" for="ddlcountries">Countries</label>
-								<div class="col-md-4">
-									<select id="ddlcountries" name="ddlcountries" class="form-control">
-										<option value="1">Select countries</option>
-									</select>
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-md-4 control-label" for="ddlcurrencies"> Currencies</label>
-								<div class="col-md-4">
-									<select id="ddlcurrencies" name="ddlcurrencies" class="form-control">
-										<option value="1">Select Currencies</option>
-									</select>
-						   		</div>
-						    </div>
-							<div class="form-group">
-								<label class="col-md-4 control-label" for="ddllanguage"> Language</label>
-								<div class="col-md-4">
-									<select id="ddllanguage" name="ddllanguage" class="form-control">
-										<option value="1">Select Language</option>
-									</select>
-						   		</div>
-						    </div>
-						   <div class="form-group">
-								<label class="col-md-4 control-label" for="ddltiming"> Timing</label>
-								<div class="col-md-4">
-									<select id="ddltimings" name="ddltimings" class="form-control">
-										<option value="1">Select Timing</option>
-									</select>
-						  		</div>
-					      </div>
-					 
+				</div>
 			</fieldset>
-			</form>
-			
-	    </div>
-		<div class="tab-pane" id="tab3">
-		      <form class="form-horizontal">
-				<fieldset>
+		</form>
+	</div>
+
+	<div class="tab-pane" id="tab4">
+
+
+		<form class="form-horizontal">
+			<fieldset>
 				<legend> </legend>
-			      <div class="form-group">
-							<label class="col-md-4 control-label" for="ddljobtypes">Job
-								Types</label>
-							<div class="col-md-4">
-								<select id="ddljobtypes" name="ddljobtypes" class="form-control">
-									<option value="1">Select Job Types</option>
-								</select>
-							</div>
-							</div>
-							<div class="form-group">
-								<label class="col-md-4 control-label" for="ddljobtypes"> Services</label>
-								<div class="col-md-4">
-									<select id="ddlservices" name="ddlservices" class="form-control">
-										<option value="1">Select Services</option>
-									</select>
-						   </div>
-					   
+				<div class="form-group">
+					<label class="col-md-8 control-label" for=" ">
+						 </label>
+					<div class="col-md-8">
+						<div class="table-services">
+							 
+						</div>
+					</div>
 					</div>
 			</fieldset>
-			</form>
-		</div>
-		<div class="tab-pane" id="tab4">
-			 <form class="form-horizontal">
-				<fieldset>
+		</form>
+	</div>
+	<div class="tab-pane" id="tab5">
+		<form class="form-horizontal">
+			<fieldset>
 				<legend> </legend>
-			      <div class="form-group">
-							<label class="col-md-4 control-label" for="ddlemployees">Employees</label>
-								<div class="col-md-4">
-									<select id="ddlemployees" name="ddlemployees" class="form-control">
-										<option value="1">Select Employees</option>
-									</select>
-								</div>
-				 </div> 
-					 
+				<div class="form-group">
+					<label class="col-md-10 control-label" for=" ">
+						 </label>
+					<div class="col-md-10">
+						<div class="table-employees">
+							 
+						</div>
+					</div>
+					</div>
 			</fieldset>
-			</form>
-	    </div>
-	 
-		 
-		<ul class="pager wizard">
-			 
-			<li class="previous"><a href="javascript:;">Previous</a></li>
-			 
-		  	<li class="next"><a href="javascript:;">Next</a></li>
-			<li class="next finish " style="display:none;"><a href="javascript:;">Finish</a></li>
-		</ul>
- </div>
+		</form>
+	</div>
+
+
+	<ul class="pager wizard">
+
+		<li class="previous"><a href="javascript:;">Previous</a></li>
+
+		<li class="next"><a href="javascript:;">Next</a></li>
+		<li class="next finish " style="display: none;"><a
+			href="javascript:;">Finish</a></li>
+	</ul>
+</div>

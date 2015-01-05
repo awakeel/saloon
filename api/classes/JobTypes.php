@@ -7,6 +7,14 @@ class JobTypes
     	$app->get('/jobtypes', function () {
     		$this->getAllByBranchId(1);
     	});
+    	$app->post('/jobtypes',function(){
+    		$request = Slim::getInstance()->request();
+    		$this->saveJobTypes($request);
+    	});
+    		$app->get('/deletejobtypes',function(){
+    			$request = Slim::getInstance()->request();
+    			$this->deleteJobTypes($request);
+    		});
     }
     function getAll( ) {  
         $sql = "select * from branches";
@@ -52,7 +60,7 @@ class JobTypes
             }
     }
      
-    function saveLanguageTranslate($request){
+    function saveJobTypes($request){
     	 
     		$params = json_decode($request->getBody());
     		if(@$params->id){
@@ -72,14 +80,14 @@ class JobTypes
     				echo '{"error":{"text":'. $e->getMessage() .'}}';
     			}
     		}else{
-		    		$sql = "INSERT INTO branches (name, notes,franchiseid) ";
-		    		$sql .="VALUES (:name, :notes , 1)";
+		    		$sql = "INSERT INTO jobtypes (name, comments,branchid) ";
+		    		$sql .="VALUES (:name, :comments , :branchid)";
 		    		try {
 		    			$db = getConnection();
 		    			$stmt = $db->prepare($sql);
-		    			$stmt->bindParam("name", $params->languageid);
-		    			$stmt->bindParam("notes", $params->title);
-		    			$stmt->bindParam("franchiseid", $params->languagetitle); 
+		    			$stmt->bindParam("name", $params->name);
+		    			$stmt->bindParam("comments", $params->comments);
+		    			$stmt->bindParam("branchid", $params->branchid); 
 		    	
 		    			$stmt->execute();
 		    			$params->id = $db->lastInsertId();
@@ -92,9 +100,9 @@ class JobTypes
     		}
     	 
     }
-    function deleteLanguageTranslate($id){
-    	 
-    	$sql = "delete from branches where id=:id ";
+    function deleteJobTypes(){
+    	 $id = $_GET['id'];
+    	$sql = "delete from jobtypes where id=:id ";
     	 
     	try {
     		$db = getConnection();

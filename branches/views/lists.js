@@ -24,7 +24,7 @@ define(['text!branches/tpl/lists.html','branches/collections/branches','branches
 			addNew:function(){
 				var that = this;
 			  	 require(['branches/views/addupdate'],function(addupdate){
-      		 	 	that.$el.html(new addupdate({id:0,model:{title:'',languagetitle:''},page:that}).$el);
+      		 	 	that.$el.html(new addupdate({id:0,model:{title:'',languagetitle:''},page:that,setting:that.setting}).$el);
 				 })
 			 
 		     },

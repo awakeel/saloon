@@ -1,4 +1,4 @@
-define(['text!employees/tpl/list.html','app'],
+define(['text!services/tpl/list.html','app'],
 	function (template,app) {
 		'use strict';
 		return Backbone.View.extend({  
@@ -21,7 +21,7 @@ define(['text!employees/tpl/list.html','app'],
 			deleteToken:function(ev){
 				var that = this;
             	var id = $(ev.target).data('id'); 
-                var URL = "api/deleteemployees";
+                var URL = "api/deleteservices";
                 $.get(URL, {id:id})
                         .done(function(data) {
                              var _json = jQuery.parseJSON(data);
@@ -40,7 +40,7 @@ define(['text!employees/tpl/list.html','app'],
                  updateToken:function(ev){
                 	 var that = this;
                 	 var id =$(ev.target).data('id');
-                	 require(['employees/views/addupdate'],function(addupdate){
+                	 require(['services/views/addupdate'],function(addupdate){
                 		 	 that.options.page.$el.append(new addupdate({id:id,title:that.model.get('title'),languagetitle:that.model.get('languagetitle'),page:that}).$el);
                 	})
                  },

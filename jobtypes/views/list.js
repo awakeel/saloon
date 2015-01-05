@@ -1,4 +1,4 @@
-define(['text!language/tpl/list.html','app'],
+define(['text!jobtypes/tpl/list.html','app'],
 	function (template,app) {
 		'use strict';
 		return Backbone.View.extend({  
@@ -21,7 +21,7 @@ define(['text!language/tpl/list.html','app'],
 			deleteToken:function(ev){
 				var that = this;
             	var id = $(ev.target).data('id'); 
-                var URL = "api/deletelanguage";
+                var URL = "api/deletejobtypes";
                 $.get(URL, {id:id})
                         .done(function(data) {
                              var _json = jQuery.parseJSON(data);
@@ -33,23 +33,23 @@ define(['text!language/tpl/list.html','app'],
                             	  });  
                             }
                             else {
-                            	
+                            	that.setting.errorMessage();
                             }
                         });
                  },
                  updateToken:function(ev){
                 	 var that = this;
                 	 var id =$(ev.target).data('id');
-                	 require(['language/views/addupdate'],function(addupdate){
+                	 require(['jobtypes/views/addupdate'],function(addupdate){
                 		 	 that.options.page.$el.append(new addupdate({id:id,title:that.model.get('title'),languagetitle:that.model.get('languagetitle'),page:that}).$el);
                 	})
                  },
                  
-                 saveToken:function(id,title,translate,view){
-                	  	this.model.set('languageid',this.options.page.languageFilter);
-	                 	this.model.set('title',title);
-	                 	this.model.set('languagetitle',translate);
-	                 	this.model.save();
+                 save:function(title,comments,branchid,view){
+                	    this.model.set('branchid',branchid);
+                	  	this.model.set('name',title);
+                	  	this.model.set('comments',comments);
+	                 	 this.model.save();
 	                 	view.closeView();
 	                 	this.setting.successMessage();
                  }

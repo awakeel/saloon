@@ -4,6 +4,8 @@ define(['jquery','language/collections/languages'], function (jquery,Language) {
         load: function (callback) {
         	 this.language = {};
         	 this.selectedLanguage = 1;
+        	 this.jobTypes = {};
+        	 this.services = {};
              this.set(_.extend({
                 env: 'TEST',
                 complied: 1,
@@ -385,6 +387,13 @@ define(['jquery','language/collections/languages'], function (jquery,Language) {
         }, 
         successMessage:function(text){
         	var info = '<div class="alert alert-success top-message">';
+        	info +='<strong>'+this.language['successalert']+':</strong>  '+ this.language['successtext']+'.';
+        	info +='</div>';
+        	$(".page-content").prepend(info);
+        	setTimeout(function(){ $(".page-content .top-message").remove()}, 3000);
+        },
+        errorMessage:function(text){
+        	var info = '<div class="alert alert-error top-message">';
         	info +='<strong>'+this.language['successalert']+':</strong>  '+ this.language['successtext']+'.';
         	info +='</div>';
         	$(".page-content").prepend(info);

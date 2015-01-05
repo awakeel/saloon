@@ -8,7 +8,8 @@ define(['text!jobtypes/tpl/lists.html','jobtypes/collections/jobtypes','jobtypes
 				"keyup #txtsearch":"searchjobtypes",
 				"click .close-p":"closePopup",
 				//"click .save-p":"saveToken",
-				"click .delete-p":"deleteToken"
+				"click .delete-p":"deleteToken",
+				"click .add-new":'addNew'
 			},
             initialize: function () {
 				this.template = _.template(template);
@@ -41,12 +42,14 @@ define(['text!jobtypes/tpl/lists.html','jobtypes/collections/jobtypes','jobtypes
 				// _data['jobtypeid'] = that.jobtypeFilter;
 				// this.objjobtypes.reset();
 				 that.$el.find('tbody').empty();
+				 that.setting.jobTypes = {};
 				 if(this.request)
 	                    this.request.abort();
 				 this.request = this.objJobTypes.fetch({data: _data, success: function(data) {
 					_.each(data.models,function(model){
 						var objJobType = new JobType({model:model,page:that,setting:that.setting});
 						that.$el.find('tbody').append(objJobType.$el);
+						that.setting.jobTypes[model.attributes['id']] = model.attributes['name'];
 					})
 					that.offsetLength = data.length;
 					that.fetched = that.fetched + data.length;
@@ -57,13 +60,16 @@ define(['text!jobtypes/tpl/lists.html','jobtypes/collections/jobtypes','jobtypes
                          
                     //} 
 					 var id = null;
-					 $(".btn-add-new").on('click',function(){ 
-						 require(['jobtype/views/addupdate'],function(addupdate){
-	           		 	 	that.$el.append(new addupdate({id:id,model:{title:'',jobtypetitle:''},page:that}).$el);
-						 })
-					 })
+					 
 				}}) 
 				
+			},
+			addNew:function(){
+				var that = this;
+				require(['jobtypes/views/addupdate'],function(AddUpdate){
+					var objAddUpdate = new AddUpdate({page:that});
+					that.$el.append(objAddUpdate.$el);
+				})
 			},
 			fillJobTypes:function(){
 				 var url = "api/jobtypes";
@@ -130,22 +136,8 @@ define(['text!jobtypes/tpl/lists.html','jobtypes/collections/jobtypes','jobtypes
 		                                that.fetchjobtypes(that.langaugeFilter);
 		                           }, 500); // 2000ms delay, tweak for faster/slower
                           }
-            },
-            saveToken:function(title,translate,view){
-            	 
-            	var objjobtype = new jobtypeModel();
-            	objjobtype.set('jobtypeid',this.jobtypeFilter);
-            	objjobtype.set('title',title);
-            	objjobtype.set('jobtypetitle',translate);
-            	var model = objjobtype.save(); 
-            	this.objjobtypes.add(objjobtype);  
-                var last_model = this.objjobtypes.last();
-                //this.closePopup();
-                var objjobtype = new jobtype({model:objjobtype,page:this,setting:this.setting});
-				this.$el.find('tbody').prepend(objjobtype.$el);
-				view.closeView();
-				this.setting.successMessage();
-            }
+            } 
+           
            
             
 		});

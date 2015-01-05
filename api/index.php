@@ -2,16 +2,18 @@
 session_start();
 $path =  dirname(__FILE__) ; 
 require $path .'/Slim/Slim.php';
+require $path .'/classes/Common.php';
 require $path.'/classes/Language.php';
 require $path .'/classes/JobTypes.php';
 require $path .'/classes/Branches.php';
 require $path .'/classes/Services.php';
-require $path .'/classes/Common.php';
+require $path .'/classes/Employees.php';
 $app = new Slim();
+$objCommon = new Common($app);
 $objLanguages = new Language($app);
 $objJobTypes = new JobTypes($app);
 $objServices = new Services($app);
-$objCommon = new Common($app);
+$objEmployees = new Employees($app);
 $objBranches = new Branches($app);
 // Section employees
 $app->get('/employees', function () {
