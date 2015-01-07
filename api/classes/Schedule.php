@@ -1,26 +1,16 @@
 <?php
-class Branches
+class Schedule
 { 
 
     // method declaration
     function __construct($app){
-	    	$app->get('/branches', function () {
+	    	$app->get('/schedules', function () {
 	    		$this->getAllByFranchise(1);
 	    	});
-    		$app->post('/branches', function () {
+    		$app->post('/schedules', function () {
     			$request = Slim::getInstance()->request();
     			$this->saveBranches($request);
     		});
-    			
-
- 
-        $app->post('/weeks/', function ($app) {
-
-        	$request = Slim::getInstance()->request();
-        	$this->saveTiming($request);
-		
-		        });
- 
     }
     function getAll( ) {  
         $sql = "select * from branches";
@@ -44,11 +34,7 @@ class Branches
     }
     function getAllByFranchise($franchiseid) { 
           
-        $sql = "SELECT b.*,l.title,c.name as country,cu.`name` as currency FROM  branches b 
-				INNER JOIN languages l ON l.id = b.`languageid`
-				LEFT JOIN countries c ON  c.id = b.`countryid`
-				LEFT JOIN currencies cu ON cu.id = b.`currencyid`
-				   WHERE  franchiseid = 1  ";
+        $sql = "SELECT * from schedule s where branchid = :franchiseid";
             try {
                     $db = getConnection();
                     $stmt = $db->prepare($sql);
@@ -110,36 +96,6 @@ class Branches
 		    		}
     		}
     	 
-    }
-    function saveTiming($request){
-    	$params = json_decode($request->getBody());
-    	//$params = $app->request()->getMediaType() ;
-    	$data = $params;
-    	 echo json_encode($data);
-    	 return;
-    	//$branchid = $params->branchid;
-    	foreach($data as $d){
-    		echo json_encode($d);
-    	}
-    	 return;
-    		$sql = "INSERT INTO branches (name, notes,franchiseid) ";
-    		$sql .="VALUES (:name, :notes , 1)";
-    		try {
-    			$db = getConnection();
-    			$stmt = $db->prepare($sql);
-    			$stmt->bindParam("name", $params->name);
-    			$stmt->bindParam("notes", $params->notes);
-    		  
-    			$stmt->execute();
-    			$params->id = $db->lastInsertId();
-    			$db = null;
-    			echo json_encode($params);
-    		} catch(PDOException $e) {
-    			//error_log($e->getMessage(), 3, '/var/tmp/php.log');
-    			echo '{"error":{"text":'. $e->getMessage() .'}}';
-    		}
-    	 
-    
     }
     function deleteLanguageTranslate($id){
     	 

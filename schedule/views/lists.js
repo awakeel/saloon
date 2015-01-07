@@ -1,5 +1,5 @@
-define(['text!schedule/tpl/schedule.html','fullcalendar','timepicker','daterangepicker','typeahead','tokenfield'],
-	function (template,calendar,timepicker,daterangepicker,typeahead,tokenfield) {
+define(['text!schedule/tpl/schedule.html','schedule/collections/schedules','fullcalendar','timepick','daterangepicker','typeahead','tokenfield'],
+	function (template,Schedules,calendar,timepicker,daterangepicker,typeahead,tokenfield) {
 		'use strict';
 		return Backbone.View.extend({  
 			events:{
@@ -13,6 +13,7 @@ define(['text!schedule/tpl/schedule.html','fullcalendar','timepicker','daterange
 				//this.listenTo(this.model, 'change', this.render);
 			   // this.listenTo(this.model, 'destroy', this.remove);
 			    this.setting = this.options.setting;
+			    this.objSchedules = new Schedules();
 			    this.render();
 			    this.fillEmployees();
 			    this.fillJobTypes();
@@ -26,7 +27,11 @@ define(['text!schedule/tpl/schedule.html','fullcalendar','timepicker','daterange
 				  
 					 
 				});
-				this.initScheduleCalander();
+				var that = this;
+				this.objSchedules.fetch({data:{},success:function(data){
+					that.initScheduleCalander(that.objSchedules.toJSON());
+				}})
+				
 				
 			} ,
 			addNewSchedule:function(){
@@ -37,7 +42,8 @@ define(['text!schedule/tpl/schedule.html','fullcalendar','timepicker','daterange
 			closeSchedule:function(){
 				this.$el.find("#popup").hide();
 			},
-			initScheduleCalander:function(){
+			initScheduleCalander:function(models){
+				console.log(models)
 				 this.$el.find('#calendar').fullCalendar({
 			            header: {
 			                left: 'prev,next today',
@@ -49,7 +55,7 @@ define(['text!schedule/tpl/schedule.html','fullcalendar','timepicker','daterange
 			            allDaySlot: false,
 			            selectable: true,
 			            slotMinutes: 15,
-			            
+			            events:models,
 			            eventClick: function (calEvent, jsEvent, view) {
 			                alert('You clicked on event id: ' + calEvent.id
 			                    + "\nSpecial ID: " + calEvent.someKey

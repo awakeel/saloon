@@ -42,14 +42,13 @@ define(['text!branches/tpl/lists.html','branches/collections/branches','branches
 			fetchBranches:function(){
 				var that = this;
 				var _data = {}; 
-				  this.objBranches.reset();
-				 that.$el.find('tbody').empty();
+				  this.objBranches.reset(); 
 				 if(this.request)
 	                    this.request.abort();
 				 this.request = this.objBranches.fetch({data: _data, success: function(data) {
 					_.each(data.models,function(model){
 						var objBranch = new Branch({model:model,page:that,setting:that.setting});
-						that.$el.find('tbody').append(objBranch.$el);
+						that.$el.find('.listing').find("thead").append(objBranch.$el);
 					})
 					that.offsetLength = data.length;
 					that.fetched = that.fetched + data.length;

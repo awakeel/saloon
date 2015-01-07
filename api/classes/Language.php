@@ -36,7 +36,7 @@ class Language
     	});
     }
     function getLanguages( ) {  
-        $sql = "select * from language";
+        $sql = "select * from languages";
             try {
                     $db = getConnection();
                     $stmt = $db->query($sql);

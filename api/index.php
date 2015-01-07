@@ -1,7 +1,7 @@
 <?php
 session_start();
 $path =  dirname(__FILE__) ; 
-require $path .'/Slim/Slim.php';
+require $path .'/Slim/Slim.php'; 
 require $path .'/classes/Common.php';
 require $path.'/classes/Language.php';
 require $path .'/classes/JobTypes.php';
@@ -9,14 +9,19 @@ require $path .'/classes/Branches.php';
 require $path .'/classes/Services.php';
 require $path .'/classes/Employees.php';
 require $path .'/classes/Authorize.php';
+require $path .'/classes/Schedule.php';
 $app = new Slim();
+
+//$app->add(new \ContentTypes());
+//$app->add(new \Slim\Middleware\ContentTypes());
 $objCommon = new Common($app);
+$objAuthorize = new Authorize($app);
 $objLanguages = new Language($app);
 $objJobTypes = new JobTypes($app);
 $objServices = new Services($app);
 $objEmployees = new Employees($app);
 $objBranches = new Branches($app);
-$objAuthorize = new Authorize($app);
+$objSchedule = new Schedule($app);
 // Section employees
 $app->get('/employees', function () {
 	if(authorize('user')){

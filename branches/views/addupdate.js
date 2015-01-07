@@ -1,5 +1,5 @@
-define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch'],
-	function (template,wizard,ModelBranch) {
+define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','timepick'],
+	function (template,wizard,ModelBranch,timepick) {
 		'use strict';
 		return Backbone.View.extend({  
 			 events:{
@@ -20,9 +20,20 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch'],
 				this.fillJobTypes();
 				this.fillCountries();
 				this.fillCurrencies();
-				this.fillTimings();
+				//this.fillTimings();
 				this.fillServices();
 				this.fillEmployees();
+				
+				var that = this;
+				this.$el.find('#chkall').on('click',function(){ 
+					that.$el.find('.days').prop("checked", !that.$el.find('.days').prop("checked"));
+					var first = that.$el.find("#txtsm").val();
+					var end = that.$el.find("#txtem").val();
+					that.$el.find(".timepicker.first-text").val(first)
+					that.$el.find(".timepicker.end-text").val(end)
+				})
+				console.log(this.$el.find("#timepicker1"));
+				this.$el.find(".timepicker").timepicker({});
 			},
 			closeView:function(){
 				
@@ -66,6 +77,9 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch'],
 						that.saveBasicSetting();
 						break;
 					case 3:
+						 that.saveTiming()
+						 break;
+					case 4:
 						that.saveJobTypes();
 						break;
 					case 4:
@@ -74,8 +88,8 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch'],
 					case 5:
 						that.saveEmployees();
 						break;
-				}
-				}});
+					}
+				} });
 			
 			},
 			saveBasicInfo:function(){
@@ -90,6 +104,29 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch'],
 				var languageid = this.$el.find("#ddllanguage").val();
 				this.objModelBranch.set({id:this.objModelBranch.get('id'),countryid:countryid,currencyid:currencyid,languageid:languageid});
 				this.objModelBranch.save();
+			},
+			saveTiming:function(){
+				 var days = [];
+				 var data = [];
+				 var that = this;
+			     $('.timings-div :checked').each(function() {
+			    	 days.push($(this).val());
+			     });
+			     _.each(days,function(index){
+			    	 console.log(that.$el.find("#txte"+index).val())
+			    	 if(index)
+			    		 data[index] = {start:that.$el.find("#txts"+index).val(),end:that.$el.find("#txte"+index).val()};
+			     })
+			      var post_data =   {data:JSON.stringify(data)} ;
+			     var URL = "api/weeks"; 
+			     $.ajax({
+			       url: URL,
+			       type: 'POST',
+			       contentType:'application/json',
+			       data: post_data,
+			       dataType:'json'
+			     });
+			    
 			},
 			saveJobTypes:function(){
 				
@@ -135,7 +172,7 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch'],
                jQuery.getJSON(url, function(tsv, state, xhr) {
                    var jobtypes = jQuery.parseJSON(xhr.responseText);
                    _.each(jobtypes,function(key){
-                  	  	options +="<option value="+key.id+"  >"+key.name+"</option>";
+                  	  	options +="<option value="+key.id+"  >"+key.code+" -- "+key.name+"</option>";
                   	  	
                    })
                    that.$el.find("#ddlcurrencies").html(options);

@@ -394,7 +394,7 @@ define(['jquery','language/collections/languages'], function (jquery,Language) {
         },
         errorMessage:function(text){
         	var info = '<div class="alert alert-error top-message">';
-        	info +='<strong>'+this.language['successalert']+':</strong>  '+ this.language['successtext']+'.';
+        	info +='<strong>'+this.language['erroralert']+':</strong>  '+ this.language['errortext']+'.';
         	info +='</div>';
         	$(".page-content").prepend(info);
         	setTimeout(function(){ $(".page-content .top-message").remove()}, 3000);

@@ -3,6 +3,7 @@ define(['text!branches/tpl/list.html','app'],
 		'use strict';
 		return Backbone.View.extend({  
 			tagName:'tr',
+			id:"table-white-row",
 			events:{
 			 	"click .delete-token":"deleteToken",
 			 	"click .edit-token":"updateToken"
@@ -16,7 +17,9 @@ define(['text!branches/tpl/list.html','app'],
 			},
 			render: function () {
 				this.$el.html(this.template(this.model.toJSON()));
-				
+				this.$el.on("mouseover",function(){
+					
+				})
 			},
 			deleteToken:function(ev){
 				var that = this;

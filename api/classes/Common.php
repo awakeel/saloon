@@ -39,7 +39,7 @@ class Common
     }
     function getAllCurrencies( ) {
     
-    	$sql = "select * from currencies";
+    	$sql = "select * from currencies order by code desc limit 30,50 ";
     	try {
     		$db = getConnection();
     		$stmt = $db->prepare($sql);

@@ -1,10 +1,13 @@
-                                           		<td><%=this.model.get('id')%></td>
-                                                <td><%=this.model.get('name')%></td>
-                                                <td><%=this.model.get('notes')%></td> 
-                                                <td width="25%">
-                                                	<a class="btn btn-danger delete-token" data-id="<%=this.model.get('id')%>"> <%=this.setting.language['delete']%></a>
-                                                	<button class="btn btn-info activate-token"><%=this.setting.language['activate']%></button>
-                                                	<button class="btn btn-success edit-token" data-id="<%=this.model.get('id')%>"><%=this.setting.language['edit']%></button>
-                                                </td>
-                                           
-                                           
+
+<th width="4%"><%=this.model.get('id')%></th>
+<th width="37%"><a href="#00"><strong><%=this.model.get('name')%></strong></a>
+	</br> <span class="label label-default">Job type: <a href="#00">Hair
+			dresser</a></span> <span class="label label-default">Location: <a
+		href="#00">lahore</a></span> <span class="label label-default">Currency:
+		<a href="#00">PKR</a>
+</span></th>
+<th width="15%"><i class="fa fa-clock-o"></i> 25/02/2015 </br> <span
+	style="color: #4ec639;"> <i class="fa fa-check"></i> Active
+</span></th>
+<th width="48%"><%=this.model.get('notes')%> 
+</th>

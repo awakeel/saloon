@@ -15,7 +15,7 @@
 			'wizard' : 'libs/wizard',
 			'fullcalendar' : 'libs/fullcalendar.min',
 			'datepicker':"libs/bootstrap-datepicker",
-			'timepicker':"libs/bootstrap-timepicker.min",
+			'timepick':'libs/timepick',
 			'daterangepicker':"libs/daterangepicker",
 			'typeahead':'libs/typeahead.min',
 			'tokenfield':"libs/bootstrap-tokenfield.min", 

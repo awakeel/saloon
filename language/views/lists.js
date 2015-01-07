@@ -68,6 +68,7 @@ define(['text!language/tpl/lists.html','language/collections/languages','languag
 			},
 			addNew:function(){
 				var that = this;
+				var id = 0;
 				  	 require(['language/views/addupdate'],function(addupdate){
            		 	 	that.$el.append(new addupdate({id:id,model:{title:'',languagetitle:''},page:that}).$el);
 					 })
