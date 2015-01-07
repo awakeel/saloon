@@ -8,6 +8,7 @@ require $path .'/classes/JobTypes.php';
 require $path .'/classes/Branches.php';
 require $path .'/classes/Services.php';
 require $path .'/classes/Employees.php';
+require $path .'/classes/Authorize.php';
 $app = new Slim();
 $objCommon = new Common($app);
 $objLanguages = new Language($app);
@@ -15,6 +16,7 @@ $objJobTypes = new JobTypes($app);
 $objServices = new Services($app);
 $objEmployees = new Employees($app);
 $objBranches = new Branches($app);
+$objAuthorize = new Authorize($app);
 // Section employees
 $app->get('/employees', function () {
 	if(authorize('user')){
@@ -41,7 +43,7 @@ $app->run();
  * Quick and dirty login function with hard coded credentials (admin/admin)
  * This is just an example. Do not use this in a production environment
  */
-function login() {
+function login1() {
     if(!empty($_POST['phone']) && !empty($_POST['password'])) {
         // normally you would load credentials from a database. 
         // This is just an example and is certainly not secure
