@@ -1,4 +1,4 @@
-define(['text!login/tpl/login.html','authorize/models/login'],
+define(['text!authorize/tpl/login.html','authorize/models/login'],
 	function (template,Login) {
 		'use strict';
 		return Backbone.View.extend({  
@@ -7,7 +7,7 @@ define(['text!login/tpl/login.html','authorize/models/login'],
 			},
 			initialize: function () {
 				this.template = _.template(template);
-				var objLogin = new Login();
+				var objAuthentication = new Authentication();
 				this.render();
 			},
 			render: function () {

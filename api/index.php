@@ -48,7 +48,7 @@ $app->run();
  * Quick and dirty login function with hard coded credentials (admin/admin)
  * This is just an example. Do not use this in a production environment
  */
-function login1() {
+function login() {
     if(!empty($_POST['phone']) && !empty($_POST['password'])) {
         // normally you would load credentials from a database. 
         // This is just an example and is certainly not secure

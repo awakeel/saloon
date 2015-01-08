@@ -87,11 +87,11 @@ class Authorize {
     function login($request) {
         include("lang.php");
         $params = json_decode($request->getBody());
-        $sql = "select * from employees where email = :email AND password = :password";
+        $sql = "select * from employees where phone = :phone AND password = :password";
         try {
             $db = getConnection();
             $stmt = $db->prepare($sql);
-            $stmt->bindParam("email", $params->email);
+            $stmt->bindParam("phone", $params->phone);
             $stmt->bindParam("password", $params->password);
             $stmt->execute();
             $stmt->store_result();
