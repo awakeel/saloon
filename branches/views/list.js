@@ -18,7 +18,7 @@ define(['text!branches/tpl/list.html','app'],
 			render: function () {
 				this.$el.html(this.template(this.model.toJSON()));
 				this.$el.on("mouseover",function(){
-					
+					this
 				})
 			},
 			deleteToken:function(ev){
