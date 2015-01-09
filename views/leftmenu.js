@@ -25,6 +25,7 @@ define(['jquery', 'backbone', 'underscore',  'text!templates/leftmenu.html','vie
 			    	var objLists = new Lists({setting:that.options.setting});
 			    	var objBreadCrumb = new BreadCrumb({title:folder,setting:that.options.setting,show:show});
 			    	$('#page-wrapper').find('.page-content').html(objLists.$el);
+			 
 			    	 $('#page-wrapper').find('.page-content').prepend(objBreadCrumb.$el);
 			    	
 			    })
