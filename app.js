@@ -20,6 +20,7 @@ define(['jquery','language/collections/languages'], function (jquery,Language) {
 			  this.objLanguage = new Language();
 			  var that = this;
 			    this.objLanguage.fetch({data: {specific:1,languageid:this.selectedLanguage}, success: function(data) {
+                                    //alert(key.languagetitle);
 			    	  _.each(data.toJSON(), function( key, value ) {
 			    		  that.language[key.title] = key.languagetitle;
 			    	 }) 

@@ -8,7 +8,9 @@ class Language
     	// Section language
     	 
     	$app->get('/languages', function () {
-    		  	 $this->getLanguages(1); 
+            if(authorize('abc')){
+                $this->getLanguages(1);
+            }
     	});
     	$app->get('/languagetranslate', function () {
     		$fields = $_GET['specific'];

@@ -40,7 +40,7 @@ $app->get('/employees', function () {
 
 
 // I add the login route as a post, since we will be posting the login form info
-$app->post('/login', 'login');
+//$app->post('/login', 'login');
 
 $app->run();
 // api/index.php

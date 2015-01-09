@@ -9,12 +9,63 @@ class Authorize {
 
     // method declaration
     function __construct($app) {
-        $app->get('/login', function () {
+        $app->post('/login', function () {
             $request = Slim::getInstance()->request();
             $this->login();
         });
     }
-
+    function login() {
+        $count = 0;
+        if (!empty($_POST['email']) && !empty($_POST['password'])) {
+            // normally you would load credentials from a database. 
+            // This is just an example and is certainly not secure
+            $email = $_POST['email'];
+            $password = $_POST['password'];
+            $sql = "select * from users where mail = '$email' AND password = '$password'";
+            /* $error = array("error"=> array("text"=>$sql, "count"=>$count));
+              echo json_encode($error); */
+            try {
+                $db = getConnection();
+                $stmt = $db->prepare($sql);
+                $stmt->execute();
+                //$stmt->store_result();
+                //$count = $stmt->fetchColumn();
+                $user = $stmt->fetch(PDO::FETCH_OBJ);
+                //echo json_encode($user);
+                $db = null;
+                if (empty($user)) {
+                    // Username and / or password are incorrect
+                    $error = array("error" => array("text" => "Username and Password are invalid."));
+                    echo json_encode($error);
+                } else {
+                    $is_active = (boolean) $user->status;
+                    if ($is_active == true) {
+                        //Email/Password combination exists, set sessions
+                        //First, generate a random string.
+                        $random = $this->randomString();
+                        //Build the token
+                        $token = $_SERVER['HTTP_USER_AGENT'] . $random;
+                        $token = $this->hashData($token);
+                        //Setup sessions vars
+                        $_SESSION['token'] = $token;
+                        $_SESSION['user_id'] = $user->userid;
+                        //$user = array("email"=>"admin", "firstName"=>"Clint", "lastName"=>"Berry", "role"=>"user");
+                        $_SESSION['user'] = $user;
+                        echo json_encode($_SESSION);
+                    } else {
+                        $error = array("error" => array("text" => "You account is not activited yet..."));
+                        echo json_encode($error);
+                    }
+                }
+            } catch (PDOException $e) {
+                $error = array("error" => array("text" => $e->getMessage()));
+                echo json_encode($error);
+            }
+        } else {
+            $error = array("error" => array("text" => "Username and Password are required."));
+            echo json_encode($error);
+        }
+    }
     function saveRole($rolename) {
         $params = json_decode($request->getBody());
         $sql = "INSERT INTO role (name) VALUES (:name)";
@@ -70,11 +121,11 @@ class Authorize {
         }
     }
 
-    function randomString($length = 50) {
+    function randomString($length = 12) {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyz';
         $string = '';
         for ($p = 0; $p < $length; $p++) {
-            $string .= $characters[mt_rand(0, strlen($characters))];
+            $string .= $characters[mt_rand(0, strlen($characters) - 1)];
         }
         return $string;
     }
@@ -82,6 +133,7 @@ class Authorize {
     function hashData($data) {
         return hash_hmac('sha512', $data, $this->_siteKey);
     }
+<<<<<<< HEAD
 
     // User login
     function login($request) {
@@ -138,6 +190,7 @@ class Authorize {
         }
     }
 
+=======
+>>>>>>> origin/qamar_3.0
 }
-
 ?>
