@@ -14,7 +14,7 @@ class Branches
     			
 
  
-        $app->post('/weeks/', function ($app) {
+        $app->post('/weeks', function () {
 
         	$request = Slim::getInstance()->request();
         	$this->saveTiming($request);
@@ -74,6 +74,10 @@ class Branches
     	 
     		$params = json_decode($request->getBody());
     		if(@$params->id){
+    			if(@$params->timing){
+    				$this->doLogic($params->timing,$params->id);
+    				return;
+    			}
     			$sql = "update branches set languageid=:l, currencyid=:c,countryid=:ct";
     			$sql .=" where id=:id";
     			try {
@@ -92,17 +96,20 @@ class Branches
     				echo '{"error":{"text":'. $e->getMessage() .'}}';
     			}
     		}else{
-		    		$sql = "INSERT INTO branches (name, notes,franchiseid) ";
-		    		$sql .="VALUES (:name, :notes , 1)";
+		    		$sql = "INSERT INTO branches (name, notes,franchiseid,languageid,currencyid,countryid) ";
+		    		$sql .="VALUES (:name, :notes , 1, :l, :c, :ct)";
 		    		try {
 		    			$db = getConnection();
 		    			$stmt = $db->prepare($sql);
 		    			$stmt->bindParam("name", $params->name);
 		    			$stmt->bindParam("notes", $params->notes); 
-		    	
+		    			$stmt->bindParam("l", $params->languageid);
+		    			$stmt->bindParam("c", $params->currencyid);
+		    			$stmt->bindParam("ct", $params->countryid);
 		    			$stmt->execute();
 		    			$params->id = $db->lastInsertId();
 		    			$db = null;
+		    			$this->doLogic($params->timing,$params->id);
 		    			echo json_encode($params);
 		    		} catch(PDOException $e) {
 		    			//error_log($e->getMessage(), 3, '/var/tmp/php.log');
@@ -111,35 +118,38 @@ class Branches
     		}
     	 
     }
-    function saveTiming($request){
-    	$params = json_decode($request->getBody());
-    	//$params = $app->request()->getMediaType() ;
-    	$data = $params;
-    	 echo json_encode($data);
-    	 return;
+    function doLogic($timing,$branchid){ 
+    	 $data = explode('||', $timing);
     	//$branchid = $params->branchid;
     	foreach($data as $d){
-    		echo json_encode($d);
-    	}
-    	 return;
-    		$sql = "INSERT INTO branches (name, notes,franchiseid) ";
-    		$sql .="VALUES (:name, :notes , 1)";
-    		try {
-    			$db = getConnection();
-    			$stmt = $db->prepare($sql);
-    			$stmt->bindParam("name", $params->name);
-    			$stmt->bindParam("notes", $params->notes);
-    		  
-    			$stmt->execute();
-    			$params->id = $db->lastInsertId();
-    			$db = null;
-    			echo json_encode($params);
-    		} catch(PDOException $e) {
-    			//error_log($e->getMessage(), 3, '/var/tmp/php.log');
-    			echo '{"error":{"text":'. $e->getMessage() .'}}';
-    		}
+    		if($d) continue;
+    		$split = explode("=",$d);
+    		$days = $split[0];
+    		$time = explode("##",@$split[1]);
+    		$open = $time[0];
+    		$close = @$time[1];
+    		$this->dbSaveTiming($days,$open,$close,$branchid);
+    	} 
     	 
     
+    }
+    function dbSaveTiming($day,$open,$close,$branchid){
+    	$sql = "INSERT INTO timings (day, opened,closed,branchid) ";
+    	$sql .="VALUES (:day, :opened,:closed,:branchid)";
+    	try {
+    		$db = getConnection();
+    		$stmt = $db->prepare($sql);
+    		$stmt->bindParam("day", $day);
+    		$stmt->bindParam("opened", $open);
+    		$stmt->bindParam("closed", $close);
+    		$stmt->bindParam("branchid", $branchid);
+    		$stmt = $stmt->execute();
+    		$db = null;
+    		echo json_encode($stmt);
+    	} catch(PDOException $e) {
+    		//error_log($e->getMessage(), 3, '/var/tmp/php.log');
+    		echo '{"error":{"text":'. $e->getMessage() .'}}';
+    	}
     }
     function deleteLanguageTranslate($id){
     	 

@@ -23,14 +23,19 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
 				//this.fillTimings();
 				this.fillServices();
 				this.fillEmployees();
+				this.addSchedule();
 				
 				var that = this;
 				this.$el.find('#chkall').on('click',function(){ 
 					that.$el.find('.days').prop("checked", !that.$el.find('.days').prop("checked"));
 					var first = that.$el.find("#txtsm").val();
 					var end = that.$el.find("#txtem").val();
-					that.$el.find(".timepicker.first-text").val(first)
-					that.$el.find(".timepicker.end-text").val(end)
+					if(!first)
+						first = "9:00AM";
+					if(!end)
+						end = "5:00PM";
+					that.$el.find(".timepicker").val(first)
+					that.$el.find(".timepicker").val(end)
 				})
 				console.log(this.$el.find("#timepicker1"));
 				this.$el.find(".timepicker").timepicker({});
@@ -55,14 +60,14 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
 					
 					// If it's the last tab then hide the last button and show the finish instead
 					if($current >= $total) {
-						that.$el.find('.pager .next').hide();
-						that.$el.find('.pager .finish').show().on('click',function(){
+						that.$el.find('.pagerw .next').hide();
+						that.$el.find('.pagerw .finish').show().on('click',function(){
 							console.log('some one clicked me');
 						});
-						that.$el.find('.pager .finish').removeClass('disabled');
+						that.$el.find('.pagerw .finish').removeClass('disabled');
 					} else {
-						that.$el.find('.pager .next').show();
-						that.$el.find('.pager .finish').hide();
+						that.$el.find('.pagerw .next').show();
+						that.$el.find('.pagerw .finish').hide();
 					}
 					 
 					
@@ -72,20 +77,17 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
 					switch(id){
 					case 1:
 						that.saveBasicInfo();
+						//that.saveBasicSetting();
 						break;
+					 
 					case 2:
-						that.saveBasicSetting();
-						break;
-					case 3:
-						 that.saveTiming()
-						 break;
-					case 4:
 						that.saveJobTypes();
 						break;
-					case 4:
+				 
+					case 3:
 						that.saveServices();
 						break;
-					case 5:
+					case 4:
 						that.saveEmployees();
 						break;
 					}
@@ -96,6 +98,10 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
 				var name = this.$el.find('#txtname').val();
 				var desc = this.$el.find('#txtdescription').val();
 				this.objModelBranch.set({name:name,notes:desc});
+				var countryid = this.$el.find('#ddlcountries').val();
+				var currencyid = this.$el.find('#ddlcurrencies').val();
+				var languageid = this.$el.find("#ddllanguage").val();
+				this.objModelBranch.set({id:this.objModelBranch.get('id'),countryid:countryid,currencyid:currencyid,languageid:languageid});
 				this.objModelBranch.save();
 			},
 			saveBasicSetting:function(){
@@ -104,10 +110,11 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
 				var languageid = this.$el.find("#ddllanguage").val();
 				this.objModelBranch.set({id:this.objModelBranch.get('id'),countryid:countryid,currencyid:currencyid,languageid:languageid});
 				this.objModelBranch.save();
+				this.saveTiming();
 			},
 			saveTiming:function(){
 				 var days = [];
-				 var data = [];
+				 var data = "";
 				 var that = this;
 			     $('.timings-div :checked').each(function() {
 			    	 days.push($(this).val());
@@ -115,17 +122,14 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
 			     _.each(days,function(index){
 			    	 console.log(that.$el.find("#txte"+index).val())
 			    	 if(index)
-			    		 data[index] = {start:that.$el.find("#txts"+index).val(),end:that.$el.find("#txte"+index).val()};
+			    		 data += index+"="+that.$el.find("#txts"+index).val()+"##"+that.$el.find("#txte"+index).val()+'||';
 			     })
-			      var post_data =   {data:JSON.stringify(data)} ;
-			     var URL = "api/weeks"; 
-			     $.ajax({
-			       url: URL,
-			       type: 'POST',
-			       contentType:'application/json',
-			       data: post_data,
-			       dataType:'json'
-			     });
+			     
+			     
+                 var result = false;
+                 var that = this;
+                 this.objModelBranch.set({id:this.objModelBranch.get('id'),timing:data});
+ 				 this.objModelBranch.save();
 			    
 			},
 			saveJobTypes:function(){
@@ -191,6 +195,13 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
 				require(['services/views/lists'],function(Services){
 					var objServices = new Services({setting:that.setting});
 					that.$el.find(".table-services").html(objServices.$el);
+				})
+			},
+			addSchedule:function(){
+				var that = this;
+				require(['schedule/views/lists'],function(Services){
+					var objServices = new Services({setting:that.setting});
+					that.$el.find(".table-schedule").html(objServices.$el);
 				})
 			},
 			fillLanguages:function(){

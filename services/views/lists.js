@@ -6,10 +6,10 @@ define(['text!services/tpl/lists.html','services/collections/services','services
 			className:"col-lg-13",
 			events:{
 				"keyup #txtsearch":"searchjobtypes",
-				"click .close-p":"closePopup",
+				//"click .close-p":"closePopup",
 				//"click .save-p":"saveToken",
 				"click .delete-p":"deleteToken",
-				"click .add-new":'addNew'
+				 
 			},
             initialize: function () {
 				this.template = _.template(template);
@@ -20,6 +20,7 @@ define(['text!services/tpl/lists.html','services/collections/services','services
 				this.offsetLength = 10;
 				this.objServices = new Services();
 				this.render();
+				this.addNew();
 				
 			}, 
 			render: function () { 
@@ -30,7 +31,7 @@ define(['text!services/tpl/lists.html','services/collections/services','services
                 //this.fillJobTypes();
                 var that = this;
                 var id = null;
-               
+              
                 
 			},
 			 

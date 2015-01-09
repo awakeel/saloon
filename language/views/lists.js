@@ -9,7 +9,7 @@ define(['text!language/tpl/lists.html','language/collections/languages','languag
 				"click .close-p":"closePopup",
 				//"click .save-p":"saveToken",
 				"click .delete-p":"deleteToken",
-				"click .btn-add-new":"addNew"
+				"click .add-new":"addNew"
 			},
             initialize: function () {
 				this.template = _.template(template);

@@ -3,7 +3,7 @@ define(['text!services/tpl/addupdate.html','services/models/service','services/v
 		'use strict';
 		return Backbone.View.extend({  
 			 events:{
-				 'click .close-p':"closeView", 
+				 'click .close':"closeView", 
 				 "click .save-p":"save"
 			 },
 			  initialize: function () {
@@ -13,23 +13,37 @@ define(['text!services/tpl/addupdate.html','services/models/service','services/v
 			},
 			render: function () {  
 				this.$el.html(this.template( ));
+				var that = this;
+				this.$el.find('#radioBtn a').on('click', function(){
+	                    var sel = $(this).data('title');
+	                    var tog = $(this).data('toggle');
+	                    that.$el.find('#'+tog).prop('value', sel);
+	                    
+	                    that.$el.find('a[data-toggle="'+tog+'"]').not('[data-title="'+sel+'"]').removeClass('active').addClass('notActive');
+	                    that.$el.find('a[data-toggle="'+tog+'"][data-title="'+sel+'"]').removeClass('notActive').addClass('active');
+	                })
 			},
 			closeView:function(){
-				 this.undelegateEvents();
-				 this.$el.remove();
-				 this.$el.removeData().unbind(); 
-				 this.remove();  
-				 Backbone.View.prototype.remove.call(this);
+				this.$el.find('#newservice').modal('toggle'); 
+				 //this.undelegateEvents();
+				// this.$el.remove();
+				// this.$el.removeData().unbind(); 
+				// this.remove();  
+				// Backbone.View.prototype.remove.call(this);
 			},
 			save:function(){ 
 				var name = this.$el.find('#txtname').val();
-				var type = this.$el.find('input[name=optionstype]:checked').val() 
-				var comments = this.$el.find('#txtcomments').val()
+				var type = this.$el.find('#bookable').val() 
+				var comments = this.$el.find('#txtcomments').val();
+				var time = this.$el.find('#txttime').val();
+				var price = this.$el.find('#txtprice').val() 
 				 	var objService = new ServiceModel();
 		            	objService.set('branchid',1);
 		            	objService.set('name',name);
 		            	objService.set('type',type);
 		            	objService.set('comments',comments);
+		            	objService.set('time',time);
+		            	objService.set('price',price);
 		            	var model = objService.save(); 
 		            	this.options.page.objServices.add(objService);  
 		                var last_model = this.options.page.objServices.last();

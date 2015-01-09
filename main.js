@@ -69,9 +69,9 @@
 				$('#wrapper').append(objContainer.objLeftMenu.$el);
 				$('#wrapper').append(objContainer.$el);
 				$('#page-wrapper').find('.page-content').html(
-						objContainer.objBreadCrumb.$el);
+				objContainer.objBreadCrumb.$el);
 				$('#page-wrapper').find('.page-content').append(
-						objContainer.objDashboard.$el);
+				objContainer.objDashboard.$el);
 				$('#wrapper').append(objContainer.objFooter.$el);
 			}
 

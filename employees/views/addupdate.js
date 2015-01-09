@@ -29,7 +29,7 @@ define(['text!employees/tpl/addupdate.html'],
 					var _p = this.$el.find('#txtphone').val();
 					var _e = this.$el.find('#txtemail').val();
 					var _pas = this.$el.find('#txtpassword').val();
-					var _about = this.$el.find('#txtabout').val();
+					var _about = 'about';//this.$el.find('#txtabout').val();
 					var _add = this.$el.find('#txtaddress').val();
 					 
 					var _type = this.$el.find('input[name=optionstype]:checked').val() 

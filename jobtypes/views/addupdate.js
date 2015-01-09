@@ -3,7 +3,7 @@ define(['text!jobtypes/tpl/addupdate.html','jobtypes/views/list','jobtypes/model
 		'use strict';
 		return Backbone.View.extend({  
 			 events:{
-				 'click .close-p':"closeView", 
+				 'click .close':"closeView", 
 				 "click .save-p":"save"
 			 },
 			  initialize: function () {
@@ -15,11 +15,12 @@ define(['text!jobtypes/tpl/addupdate.html','jobtypes/views/list','jobtypes/model
 				this.$el.html(this.template( ));
 			},
 			closeView:function(){
-				 this.undelegateEvents();
-				 this.$el.remove();
-				 this.$el.removeData().unbind(); 
-				 this.remove();  
-				 Backbone.View.prototype.remove.call(this);
+				this.$el.find('.modal').modal('toggle'); 
+				 //this.undelegateEvents();
+				//1 this.$el.remove();
+				 //this.$el.removeData().unbind(); 
+				 //this.remove();  
+				 //Backbone.View.prototype.remove.call(this);
 			},
 			save:function(){
 						var name = this.$el.find('#txtname').val();

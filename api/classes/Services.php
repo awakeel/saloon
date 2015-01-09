@@ -79,15 +79,16 @@ class Services
     			echo '{"error":{"text":'. $e->getMessage() .'}}';
     		}
     	}else{
-    		$sql = "INSERT INTO services (name, comments,branchid) ";
-    		$sql .="VALUES (:name, :comments , :branchid)";
+    		$sql = "INSERT INTO services (name, comments,branchid,time,price) ";
+    		$sql .="VALUES (:name, :comments , :branchid,:time,:price)";
     		try {
     			$db = getConnection();
     			$stmt = $db->prepare($sql);
     			$stmt->bindParam("name", $params->name);
     			$stmt->bindParam("comments", $params->comments);
     			$stmt->bindParam("branchid", $params->branchid);
-    		  
+    			$stmt->bindParam("price", $params->price);
+    			$stmt->bindParam("time", $params->time);
     			$stmt->execute();
     			$params->id = $db->lastInsertId();
     			$db = null;

@@ -50,9 +50,9 @@ define(['text!schedule/tpl/schedule.html','schedule/collections/schedules','full
 			                center: 'title',
 			                right: 'month,agendaWeek,agendaDay'
 			            },
-			            defaultView: 'agendaDay',
+			            defaultDate: 'agendaDay',
 			            editable: true,
-			            allDaySlot: false,
+			            allDaySlot: true,
 			            selectable: true,
 			            slotMinutes: 15,
 			            events:models,

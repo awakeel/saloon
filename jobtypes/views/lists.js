@@ -6,10 +6,10 @@ define(['text!jobtypes/tpl/lists.html','jobtypes/collections/jobtypes','jobtypes
 			className:"col-lg-13",
 			events:{
 				"keyup #txtsearch":"searchjobtypes",
-				"click .close-p":"closePopup",
+				//"click .close-p":"closePopup",
 				//"click .save-p":"saveToken",
 				"click .delete-p":"deleteToken",
-				"click .add-new":'addNew'
+				//"click .add-new":'addNew'
 			},
             initialize: function () {
 				this.template = _.template(template);
@@ -20,7 +20,7 @@ define(['text!jobtypes/tpl/lists.html','jobtypes/collections/jobtypes','jobtypes
 				this.offsetLength = 10;
 				this.objJobTypes = new JobTypes();
 				this.render();
-				
+				this.addNew();
 			}, 
 			render: function () { 
 				this.$el.html(this.template({}));
