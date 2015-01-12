@@ -4,14 +4,17 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
 		return Backbone.View.extend({  
 			 events:{
 				 'click .close-p':"closeView", 
-				 "click .save-p":"save"
+				 "click .save-p":"save",
+				 "click .btn-save":"saveSteps"
 			 },
 			 id:"rootwizard",
 			  initialize: function () {
+				this.id = 0;
 				this.template = _.template(template);
 				this.setting = this.options.setting;
 				this.objModelBranch = new ModelBranch();
 				this.render();
+				
 			},
 			render: function () {  
 				this.$el.html(this.template( ));
@@ -34,12 +37,18 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
 						first = "9:00AM";
 					if(!end)
 						end = "5:00PM";
-					that.$el.find(".timepicker").val(first)
-					that.$el.find(".timepicker").val(end)
+					that.$el.find(".first-text").val(first)
+					that.$el.find(".end-text").val(end)
 				})
 				console.log(this.$el.find("#timepicker1"));
-				this.$el.find(".timepicker").timepicker({});
-			},
+				this.$el.find(".timepicker").timepicker({ 'timeFormat': 'H:i' });
+				this.$el.find('.days').on('click',function(){
+					if($(this).prop('checked')!= true){
+						var first = that.$el.find("#txts"+$(this).attr('id')).val('');
+						var end = that.$el.find("#txte"+$(this).attr('id')).val('');
+					}
+				})
+			} ,
 			closeView:function(){
 				
 				 this.undelegateEvents();
@@ -76,61 +85,154 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
 					var id = tab.data('id');
 					switch(id){
 					case 1:
-						that.saveBasicInfo();
+						return that.saveBasicInfo(id);
 						//that.saveBasicSetting();
 						break;
 					 
 					case 2:
-						that.saveJobTypes();
+						//that.saveJobTypes(2);
 						break;
 				 
 					case 3:
-						that.saveServices();
+						//that.saveServices(3);
 						break;
 					case 4:
-						that.saveEmployees();
+						//that.saveEmployees(4);
 						break;
 					}
 				} });
 			
 			},
-			saveBasicInfo:function(){
+			saveBasicInfo:function(id){
+				this.clearFormInput();
 				var name = this.$el.find('#txtname').val();
+				if(!name){
+					this.$el.find('.name-error').removeClass('hide');
+					return false;
+				}
 				var desc = this.$el.find('#txtdescription').val();
+				if(!desc){
+					this.$el.find('.desc-error').removeClass('hide');
+					return false;
+				}
+				
+				
 				this.objModelBranch.set({name:name,notes:desc});
 				var countryid = this.$el.find('#ddlcountries').val();
 				var currencyid = this.$el.find('#ddlcurrencies').val();
 				var languageid = this.$el.find("#ddllanguage").val();
+				if(!name){
+					
+				}
 				this.objModelBranch.set({id:this.objModelBranch.get('id'),countryid:countryid,currencyid:currencyid,languageid:languageid});
-				this.objModelBranch.save();
+				return this.saveTiming(id);
+				
 			},
-			saveBasicSetting:function(){
-				var countryid = this.$el.find('#ddlcountries').val();
-				var currencyid = this.$el.find('#ddlcurrencies').val();
-				var languageid = this.$el.find("#ddllanguage").val();
-				this.objModelBranch.set({id:this.objModelBranch.get('id'),countryid:countryid,currencyid:currencyid,languageid:languageid});
-				this.objModelBranch.save();
-				this.saveTiming();
+			clearFormInput:function(){
+				this.$el.find('.name-error').addClass('hide');	 
+				this.$el.find('.desc-error').addClass('hide');
+				this.$el.find('.help-block').addClass('hide');
 			},
-			saveTiming:function(){
+			saveTiming:function(id){
+				
 				 var days = [];
+				 this.days = days;
 				 var data = "";
 				 var that = this;
 			     $('.timings-div :checked').each(function() {
 			    	 days.push($(this).val());
 			     });
+			     var returnValue = true;
+			     if(days.length < 1){
+			    	 that.$el.find('.timing-error').removeClass('hide');
+						return false;
+			     }
 			     _.each(days,function(index){
-			    	 console.log(that.$el.find("#txte"+index).val())
-			    	 if(index)
-			    		 data += index+"="+that.$el.find("#txts"+index).val()+"##"+that.$el.find("#txte"+index).val()+'||';
+			    	 console.log(index);
+			    	 if(index){
+					    	 console.log(that.$el.find("#txte"+index).val()) 
+					    	 var start = that.$el.find("#txts"+index).val();
+					    	 var end = that.$el.find("#txte"+index).val()
+					    	
+					    	 var diff = that.calculate(start,end);
+					    	 console.log(index + 'start '+ start + ' end '+ end + 'difference')
+					    	 if(diff < 1 ){
+					    		var span = '<span class="help-block"><i class="fa fa-warning"></i> Correct time for '+ index +'</span>';
+					    		 that.$el.find("#txts"+index).after(span);
+					    		 that.$el.find("#txte"+index).after(span);
+					    		 returnValue = false;
+					    	 }
+					    	
+					    		 data += index+"="+start+"##"+end+'||';
+			    	 } 
 			     })
 			     
-			     
-                 var result = false;
-                 var that = this;
-                 this.objModelBranch.set({id:this.objModelBranch.get('id'),timing:data});
- 				 this.objModelBranch.save();
-			    
+			     if(returnValue == false) return false;
+	                 var that = this;
+	                 var spin = this.setting.showLoading('Saving info please wait',this.$el,{top:'30%'});
+                  this.objModelBranch.set({timing:data});
+ 				 
+ 				  $.when(this.objModelBranch.save()).done(function(){
+ 					this.showMessage('Basic Info, setting and timing successfuly saved.',id);
+ 					
+ 				  }).fail(function(){
+ 					  this.showMessage('Problem saving info',id);
+ 					   
+ 				   });
+ 			 
+ 				 spin.stop ();
+ 				  
+			},
+			calculate:function(time1,time2) {
+				 if(time1 == 0 || time2 == 0) return 0;
+		         var hours = parseInt(time1.split(':')[0], 10) - parseInt(time2.split(':')[0], 10);
+		         if(hours < 0) hours = 24 + hours;
+		         
+		         return hours;
+		     },
+			showMessage:function(text,id){
+				 
+				var time = ""; 
+				this.id = id;
+				if( this.days.length == 0 && this.id == 1)
+				///	time = "although time is not selected, you can add it later.  ";
+				if(id == 1)
+					this.$el.find('.btn-save').html('Go to next step').removeClass('btn-save').addClass('next-step-ahead').attr('data-id',this.id);
+				
+				
+				var str = '<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>'+text+ time;
+                
+				if (id !=5)
+                	   str +='<strong><a class="next-step-ahead" style="cursor:pointer" data-id='+this.id+'>Go to Next Step</a></strong>.';
+                  
+                   str +='</div>';
+                this.$el.find('.show-message').html(str);
+                this.$el.find('.next-step-ahead').attr('data-id',this.id);
+                var that = this;
+				this.$el.find('.next-step-ahead').on('click',function(){
+					console.log(that.id)
+					 switch(that.id){
+					case 1:
+						  that.showMessage('Add Few job types to department for example, Manager, Hair dresser, cleaner etc, or ',2)
+						  ///that.$el.find('.pager .next-1').click();
+						break;
+					case 2:
+						  
+						  that.showMessage('Add some services to department for example, Hair dressing, massage etc, or  ',3)
+						  ///that.$el.find('.pager .next-1').click();
+							break;
+					case 3:
+						  that.$el.find('.pager .next-1').click();
+						  that.showMessage('Add employees to department for example XYZ who is working with you, or ',4)
+							break;
+					case 4:
+						  that.$el.find('.next-step-ahead').html('All done');
+						 
+						  that.showMessage('Schedule your employee timing and assign task, <a>You have successfuly created new department</a>',5)
+							break;
+						
+					}
+				});
 			},
 			saveJobTypes:function(){
 				

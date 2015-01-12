@@ -19,6 +19,7 @@
 			'daterangepicker':"libs/daterangepicker",
 			'typeahead':'libs/typeahead.min',
 			'tokenfield':"libs/bootstrap-tokenfield.min", 
+			'spin':'libs/spin'
 		},
 		shim : {
 			jquery : {

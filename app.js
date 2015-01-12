@@ -1,4 +1,4 @@
-define(['jquery','language/collections/languages'], function (jquery,Language) {
+define(['jquery','language/collections/languages','spin'], function (jquery,Language,Spinner) {
     'use strict';
     var app = Backbone.Model.extend({
         load: function (callback) {
@@ -66,22 +66,30 @@ define(['jquery','language/collections/languages'], function (jquery,Language) {
                 var image = $('<img />').attr('src', this);
             });
         }, 
-        showLoading: function (message, container, _styles) {
-            var divStyles = "";
-            if (message) {
-                message = message !== true ? message : 'Loading...';
-                $(container).find('.loading').remove();
-                if (_styles) {
-                    _.each(_styles, function (val, key) {
-                        divStyles += key + ":" + val + ";"
-                    }, this);
-                }
-                $(container).append('<div class="loading"><p style=' + divStyles + '>' + message + '</p></div>');
-            }
-            else {
-                $(container).find(' > .loading').remove();
-            }
-        },
+        showLoading: function (message,container,opts) {
+        	var opts = {
+          		  lines: 13, // The number of lines to draw
+          		  length: 38, // The length of each line
+          		  width: 10, // The line thickness
+          		  radius: 30, // The radius of the inner circle
+          		  corners: 1, // Corner roundness (0..1)
+          		  rotate: 0, // The rotation offset
+          		  direction: 1, // 1: clockwise, -1: counterclockwise
+          		  color: '#000', // #rgb or #rrggbb or array of colors
+          		  speed: 5, // Rounds per second
+          		  trail: 60, // Afterglow percentage
+          		  shadow: true, // Whether to render a shadow
+          		  hwaccel: false, // Whether to use hardware acceleration
+          		  className: 'spinner', // The CSS class to assign to the spinner
+          		  zIndex: 2e9, // The z-index (defaults to 2000000000)
+          		  top: '50%', // Top position relative to parent
+          		  left: '50%' // Left position relative to parent
+          		};
+        	$.extend(opts,opts)
+  			        var spinner = new Spinner().spin();
+  			         $(container).append(spinner.el);
+  			         return spinner;
+        }, 
         showAlert: function (message, container, option) {
             if (message) {
                 var inlineStyle = (option && option.top) ? ('top:' + option.top) : '';
@@ -399,7 +407,7 @@ define(['jquery','language/collections/languages'], function (jquery,Language) {
         	info +='</div>';
         	$(".page-content").prepend(info);
         	setTimeout(function(){ $(".page-content .top-message").remove()}, 3000);
-        }
+        } 
     });
 
     return new app();

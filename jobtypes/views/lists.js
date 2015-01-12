@@ -5,7 +5,7 @@ define(['text!jobtypes/tpl/lists.html','jobtypes/collections/jobtypes','jobtypes
 			tagName:"div",
 			className:"col-lg-13",
 			events:{
-				"keyup #txtsearch":"searchjobtypes",
+				"keyup #txtsearchjobtype":"searchjobtypes",
 				//"click .close-p":"closePopup",
 				//"click .save-p":"saveToken",
 				"click .delete-p":"deleteToken",
@@ -37,7 +37,7 @@ define(['text!jobtypes/tpl/lists.html','jobtypes/collections/jobtypes','jobtypes
 			fetchJobTypes:function(){
 				var that = this;
 				var _data = {}; 
-				/// _data['search'] = this.searchText;
+				 _data['search'] = this.searchText;
 				// _data['specific'] = 0;
 				// _data['jobtypeid'] = that.jobtypeFilter;
 				// this.objjobtypes.reset();
@@ -120,12 +120,14 @@ define(['text!jobtypes/tpl/lists.html','jobtypes/collections/jobtypes','jobtypes
                      if ((ev.ctrlKey==true)&& (code == '65' || code == '97')) {
                            return;
                      }
+                     console.log(nonKey);
                      if($.inArray(code, nonKey)!==-1) return;
+                     console.log(code)
                           if(code == 8 || code == 46){
-                                 if(text){ 
-		                        	 that.searchText = text;
-			                          that.fetchjobtypes();
-		                         }
+	                                 if(text){ 
+			                        	 that.searchText = text;
+				                          that.fetchJobTypes();
+			                         }
                            }else{
 		                   
 		                        this.searchText = text;
@@ -133,7 +135,7 @@ define(['text!jobtypes/tpl/lists.html','jobtypes/collections/jobtypes','jobtypes
 		                            that.timer = setTimeout(function() { // assign timer a new timeout 
 		                                if (text.length < 2) return;
 		                                that.searchText = text;
-		                                that.fetchjobtypes(that.langaugeFilter);
+		                                that.fetchJobTypes(that.langaugeFilter);
 		                           }, 500); // 2000ms delay, tweak for faster/slower
                           }
             } 

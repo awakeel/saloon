@@ -8,7 +8,8 @@ define(['text!branches/tpl/lists.html','branches/collections/branches','branches
 			 	"click .close-p":"closePopup",
 				//"click .save-p":"saveToken",
 				"click .delete-p":"deleteToken",
-				"click .btn-add-new":"addNew"
+				"click .btn-add-new":"addNew",
+				"click .refresh":'render'
 			},
             initialize: function () {
 				this.template = _.template(template);
@@ -17,6 +18,7 @@ define(['text!branches/tpl/lists.html','branches/collections/branches','branches
 				 this.searchText = '';
 				this.setting = this.options.setting;
 				this.offsetLength = 10;
+				
 				this.objBranches = new Branches();
 				this.render();
 				
@@ -32,6 +34,7 @@ define(['text!branches/tpl/lists.html','branches/collections/branches','branches
 				this.$el.html(this.template({}));
 				$(window).scroll(_.bind(this.lazyLoading, this));
                 $(window).resize(_.bind(this.lazyLoading, this));
+                this.spin = this.setting.showLoading('fetching info please wait',this.$el,{top:'30%'});
                 this.fetchBranches();
                 var that = this;
                 var id = null;
@@ -61,7 +64,7 @@ define(['text!branches/tpl/lists.html','branches/collections/branches','branches
 					 var id = null;
 					 
 				}});
-				 console.log('I am clicked at list');
+				this.spin.stop();
 				
 			},
 			fillLanguages:function(){

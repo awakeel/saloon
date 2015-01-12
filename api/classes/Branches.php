@@ -12,7 +12,10 @@ class Branches
     			$this->saveBranches($request);
     		});
     			
-
+    			$app->get('/deletebranch',function(){
+    				$request = Slim::getInstance()->request();
+    				$this->deleteBranch($request);
+    			});
  
         $app->post('/weeks', function () {
 
@@ -151,8 +154,8 @@ class Branches
     		echo '{"error":{"text":'. $e->getMessage() .'}}';
     	}
     }
-    function deleteLanguageTranslate($id){
-    	 
+    function deleteBranch(){
+    	 $id = $_GET['id'];
     	$sql = "delete from branches where id=:id ";
     	 
     	try {

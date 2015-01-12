@@ -5,7 +5,7 @@ define(['text!branches/tpl/list.html','app'],
 			tagName:'tr',
 			id:"table-white-row",
 			events:{
-			 	"click .delete-token":"deleteToken",
+			 	"click .delete-branch":"deleteBranch",
 			 	"click .edit-token":"updateToken"
 			},
             initialize: function () {
@@ -21,7 +21,7 @@ define(['text!branches/tpl/list.html','app'],
 					this
 				})
 			},
-			deleteToken:function(ev){
+			deleteBranch:function(ev){
 				var that = this;
             	var id = $(ev.target).data('id'); 
                 var URL = "api/deletebranch";

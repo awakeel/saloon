@@ -22,9 +22,17 @@ define(['text!jobtypes/tpl/addupdate.html','jobtypes/views/list','jobtypes/model
 				 //this.remove();  
 				 //Backbone.View.prototype.remove.call(this);
 			},
+			clearErrorFilter:function(){
+				this.$el.find('.name-error').addClass('hide');
+			},
 			save:function(){
-						var name = this.$el.find('#txtname').val();
+						 var name = this.$el.find('#txtname').val();
 						 var comments = this.$el.find('#txtcomments').val()
+						 if(!name){
+							 this.$el.find('.name-error').removeClass('hide')
+							 return false;
+						 }
+						var spin = this.options.page.setting.showLoading('',this.$el);
 		            	var objjobtype = new JobTypeModel();
 		            	objjobtype.set('branchid',1);
 		            	objjobtype.set('name',name);
@@ -37,7 +45,9 @@ define(['text!jobtypes/tpl/addupdate.html','jobtypes/views/list','jobtypes/model
 						this.options.page.$el.find('tbody').prepend(objjobtype.$el);
 						this.closeView();
 						this.options.page.setting.successMessage();
-		          
+						this.$el.find('#txtname').val('');
+						this.$el.find('#txtcomments').val('');
+						spin.stop();
 			}
 		 
 		});

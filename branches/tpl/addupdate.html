@@ -1,6 +1,8 @@
- 
-<!-- /.row -->
-<!-- end PAGE TITLE ROW -->
+
+<div class="alert alert-block">
+	Enter Basic information and setting along with timings and hit <b>Next
+		Step</b>
+</div>
 <div class="row">
 	<div class="col-md-12">
 		<div id="white_background_wrapper">
@@ -9,24 +11,24 @@
 					<div class="tabs_menu_bg">
 						<ul class="nav nav-pills nav-stacked" id="myStacked">
 							<li data-id="1" class="active"><a data-toggle="tab"
-								href="#stackedHome"> <i class="fa fa-building-o iconsize"></i>
-									</br>Departments
+								href="#stackedHome" id="li_1"> <i
+									class="fa fa-building-o iconsize"></i> </br>Departments
 							</a></li>
-							<li data-id="2" class=""><a data-toggle="tab"
-								href="#stackedProfile"> <i class="fa fa-briefcase iconsize"></i>
-									</br> Job Type
+							<li data-id="2" class="" id="li_2"><a data-toggle="tab"
+								href="#stackedProfile" id="li_2"> <i
+									class="fa fa-briefcase iconsize"></i> </br> Job Type
 							</a></li>
 							<li data-id="3" class=""><a data-toggle="tab"
-								href="#stackedServices"> <i class="fa fa-cogs iconsize"></i>
-									</br> Services
+								href="#stackedServices" id="li_3"> <i
+									class="fa fa-cogs iconsize"></i> </br> Services
 							</a></li>
 							<li data-id="4" class=""><a data-toggle="tab"
-								href="#stackedEmployee"> <i class="fa fa-group iconsize"></i>
-									</br> Employees
+								href="#stackedEmployee" id="li_4"> <i
+									class="fa fa-group iconsize"></i> </br> Employees
 							</a></li>
-							<li data-id="5" class=""><a data-toggle="tab"
-								href="#stackedschedule"> <i class="fa fa-calendar iconsize"></i>
-									</br> My First</br> Work schedule
+							<li data-id="5" class="" id="li_5"><a data-toggle="tab"
+								href="#stackedschedule" id="li_5"> <i
+									class="fa fa-calendar iconsize"></i> </br> My First</br> Work schedule
 							</a></li>
 
 
@@ -37,13 +39,11 @@
 					<div class="tab-content" id="myStackedContent">
 
 
-						<ul class="pager wizard wizard-pager">
+						<ul class="pagerw wizard">
 
-							<li class="previous btn btn-primary"><a href="javascript:;">Previous</a></li>
+							<li class="next"><a href="#">Save & Go to next step</a></li>
+							<li class="previous" style=""><a href="#">Previous Step</a></li>
 
-							<li class="next btn btn-primary"><a href="javascript:;">Next</a></li>
-							<li class="next finish btn btn-primary" style="display: none;"><a
-								href="javascript:;">Finish</a></li>
 						</ul>
 						<div class="clearfix"></div>
 						<div id="stackedHome" class="tab-pane fade active in">
@@ -52,7 +52,7 @@
 
 									<div class="clearfix"></div>
 									<div class="col-md-6">
-										<h3>Basic Info</h3>
+										<h3>New Department Basic Info</h3>
 										</br>
 										<div class="row">
 											<div class="form_container">
@@ -62,9 +62,12 @@
 												</div>
 												<div class="col-xs-9">
 													<div class="form_container">
-														<input type="text"
+														<input type="text" required="required"
 															placeholder="Enter name, eg department 1" id="txtname"
-															class="form-control">
+															class="form-control"> <span
+															class="help-block hide name-error"><i
+															class="fa fa-warning"></i> You must name your department,
+															e.g Oslo Branch!</span>
 													</div>
 												</div>
 											</div>
@@ -78,6 +81,8 @@
 													<div class="form_container">
 														<textarea name="" id="txtdescription" cols="" rows=""
 															class="class="form-control""></textarea>
+														<span class="help-block hide desc-error"><i
+															class="fa fa-warning"></i>Enter few words description!</span>
 													</div>
 												</div>
 											</div>
@@ -133,9 +138,14 @@
 										</div>
 									</div>
 									<div class="clearfix"></div>
-									<h3>Timings</h3>
-									<div class="table-responsive">
-										<table class="table table-hover  table-striped">
+									<h3>
+										Timings <span class="help-block hide timing-error"
+											style="font-size: 15px; margin-right: 20px;"><i
+											class="fa fa-warning"></i>You have'nt select the timings, select at least one day!</span>
+									</h3>
+
+									<div class="table-responsive" style="margin-right: 20px;">
+										<table class="table table-hover  table-striped  ">
 											<thead>
 												<tr>
 													<th>
@@ -149,98 +159,102 @@
 													<th>To</th>
 												</tr>
 											</thead>
-											<tbody>
+											<tbody class="timings-div">
 
 												<tr>
 													<td>
 														<div class="checkbox">
 															<label> <input name="days_group[]" class='days'
-																id='m' type="checkbox" value="m">Monday
+																id='monday' type="checkbox" value="monday">Monday
 															</label>
 														</div>
 													</td>
 													<td><input type="text" class="timepicker form-control"
-														id="txtsm" /></td>
+														id="txtsmonday" /></td>
 													<td><input type="text" class="timepicker form-control"
-														id="txtem" /></td>
+														id="txtemonday" /></td>
 												</tr>
 												<tr>
 													<td>
 														<div class="checkbox">
-															<label> <input name="days_group[]" id='t'
-																class='days' type="checkbox" value="t">Tuesday
+															<label> <input name="days_group[]" id='tuesday'
+																class='days' type="checkbox" value="tuesday">Tuesday
 															</label>
 														</div>
 													</td>
 													<td><input type="text"
-														class="timepicker first-text form-control" id="txtst" /></td>
+														class="timepicker first-text form-control"
+														id="txtstuesday" /></td>
 													<td><input type="text"
-														class="timepicker end-text form-control" id="txtet" /></td>
-												</tr>
-												<tr>
-													<td>
-														<div class="checkbox">
-															<label> <input name="days_group[]" class='days'
-																id='w' type="checkbox" value="w">Wensday
-															</label>
-														</div>
-													</td>
-													<td><input type="text"
-														class="timepicker first-text form-control" id="txtsw" /></td>
-													<td><input type="text"
-														class="timepicker end-text form-control" id="txtew" /></td>
+														class="timepicker end-text form-control" id="txtetuesday" /></td>
 												</tr>
 												<tr>
 													<td>
 														<div class="checkbox">
 															<label> <input name="days_group[]" class='days'
-																id='th' type="checkbox" value="th">Thursday
+																id='wensday' type="checkbox" value="wensday">Wensday
 															</label>
 														</div>
 													</td>
 													<td><input type="text"
-														class="timepicker first-text form-control" id="txtsth" /></td>
+														class="timepicker first-text form-control"
+														id="txtswensday" /></td>
 													<td><input type="text"
-														class="timepicker end-text form-control" id="txteth" /></td>
+														class="timepicker end-text form-control" id="txtewensday" /></td>
 												</tr>
 												<tr>
 													<td>
 														<div class="checkbox">
 															<label> <input name="days_group[]" class='days'
-																id='f' type="checkbox" value="f">Friday
+																id='thursday' type="checkbox" value="thursday">Thursday
 															</label>
 														</div>
 													</td>
 													<td><input type="text"
-														class="timepicker first-text form-control" id="txtsf" /></td>
+														class="timepicker first-text form-control"
+														id="txtsthursday" /></td>
 													<td><input type="text"
-														class="timepicker end-text form-control" id="txtef" /></td>
+														class="timepicker end-text form-control" id="txtethursday" /></td>
 												</tr>
 												<tr>
 													<td>
 														<div class="checkbox">
 															<label> <input name="days_group[]" class='days'
-																id='st' type="checkbox" value="st">Saturday
+																id='friday' type="checkbox" value="friday">Friday
 															</label>
 														</div>
 													</td>
 													<td><input type="text"
-														class="timepicker first-text form-control" id="txtsst" /></td>
+														class="timepicker first-text form-control" id="txtsfriday" /></td>
 													<td><input type="text"
-														class="timepicker end-text form-control" id="txtest" /></td>
+														class="timepicker end-text form-control" id="txtefriday" /></td>
 												</tr>
 												<tr>
 													<td>
 														<div class="checkbox">
-															<label> <input name="days_group[]" id='s'
-																class='days' type="checkbox" value="s">Sunday
+															<label> <input name="days_group[]" class='days'
+																id='saturday' type="checkbox" value="saturday">Saturday
 															</label>
 														</div>
 													</td>
 													<td><input type="text"
-														class="timepicker first-text form-control" id="txtss" /></td>
+														class="timepicker first-text form-control"
+														id="txtssaturday" /></td>
 													<td><input type="text"
-														class="timepicker end-text form-control" id="txtes" /></td>
+														class="timepicker end-text form-control" id="txtesaturday" /></td>
+												</tr>
+												<tr>
+													<td>
+														<div class="checkbox">
+															<label> <input name="days_group[]" id='sunday'
+																class='days' type="checkbox" value="sunday">Sunday
+															</label>
+														</div>
+													</td>
+													<td><input type="text"
+														class="timepicker first-text form-control" id="txtssunday" /></td>
+													<td><input type="text"
+														class="timepicker end-text form-control" id="txtesunday" /></td>
 												</tr>
 											</tbody>
 										</table>
@@ -251,26 +265,26 @@
 						</div>
 
 						<div id="stackedProfile" class="tab-pane  ">
-						 
+
 							<div class=" ">
 
 								<div class="table-jobtypes"></div>
 							</div>
-							 
+
 						</div>
 						<div id="stackedServices" class="tab-pane   ">
-							 
+
 							<div class=" ">
 								<div class="table-services"></div>
 							</div>
-							 
+
 						</div>
 						<div id="stackedEmployee" class="tab-pane  ">
-						 
+
 							<div class=" ">
 								<div class="table-employees"></div>
 							</div>
-							 
+
 
 						</div>
 						<div id="stackedschedule" class="tab-pane  ">
@@ -283,14 +297,12 @@
 					</div>
 				</div>
 			</div>
-			<ul class="pager wizard wizard-pager">
 
-							<li class="previous btn btn-primary"><a href="javascript:;">Previous</a></li>
+			<ul class="pagerw wizard">
+				<li class="next"><a href="#">Save & Go to next step</a></li>
+				<li class="previous"><a href="#">Previous Step</a></li>
 
-							<li class="next btn btn-primary"><a href="javascript:;">Next</a></li>
-							<li class="next finish btn btn-primary" style="display: none;"><a
-								href="javascript:;">Finish</a></li>
-						</ul>
+			</ul>
 		</div>
 	</div>
 </div>

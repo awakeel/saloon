@@ -5,7 +5,9 @@ class JobTypes
     // method declaration
     function __construct($app){
     	$app->get('/jobtypes', function () {
-    		$this->getAllByBranchId(1);
+    		$request = Slim::getInstance()->request();
+    		
+    		$this->getAllByBranchId($request);
     	});
     	$app->post('/jobtypes',function(){
     		$request = Slim::getInstance()->request();
@@ -36,9 +38,14 @@ class JobTypes
                     echo json_encode($error);
             }
     }
-    function getAllByBranchId($branchId) { 
-          
-        $sql = "select * from jobtypes where branchid = :branchid";
+    function getAllByBranchId($request) { 
+    	$search = "";
+    	echo json_encode($_GET['search']);
+    	if(@$_GET['search'] !=''){
+    		$search = $_GET['search'];
+    		$search = " and name like %$search%";
+    	}
+    	$sql = "select * from jobtypes where branchid = :branchid $search";
             try {
                     $db = getConnection();
                     $stmt = $db->prepare($sql);

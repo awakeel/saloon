@@ -1,13 +1,12 @@
+ 
+<th width="30%"><a href="#00"><strong><%=this.model.get('name')%></strong></a>
+	 </th>
+<th width="10%"><span class="label label-green">Active</span></th>
+<th width="35%"><%=this.model.get('notes')%></th>
 
-<th width="4%"><%=this.model.get('id')%></th>
-<th width="37%"><a href="#00"><strong><%=this.model.get('name')%></strong></a>
-	</br> <span class="label label-default">Job type: <a href="#00">Hair
-			dresser</a></span> <span class="label label-default">Location: <a
-		href="#00">lahore</a></span> <span class="label label-default">Currency:
-		<a href="#00">PKR</a>
-</span></th>
-<th width="15%"><i class="fa fa-clock-o"></i> 25/02/2015 </br> <span
-	style="color: #4ec639;"> <i class="fa fa-check"></i> Active
-</span></th>
-<th width="48%"><%=this.model.get('notes')%> 
-</th>
+<th width="7%"> <%=this.model.get('createdon')%>
+ </th>
+   <th width="	18%">
+                                                	<a class="btn btn-danger delete-branch btn-sm" style="color:#fff" data-id="<%=this.model.get('id')%>"> <%=this.setting.language['delete']%></a>
+                                                	<button class="btn btn-info activate-token btn-sm"><%=this.setting.language['edit']%></button>
+                                                 </th>
