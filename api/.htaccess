@@ -1,5 +1,9 @@
 RewriteEngine On
+
 RewriteBase /saloon/api/
+
 RewriteCond %{REQUEST_FILENAME} !-f
+
 RewriteRule ^ /saloon/api/index.php [QSA,L]
+
 RewriteRule ^(.*)$ %{ENV:BASE}index.php [QSA,L]

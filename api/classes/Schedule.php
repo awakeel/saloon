@@ -3,7 +3,9 @@ class Schedule
 { 
 
     // method declaration
+    public $branchId;
     function __construct($app){
+    		$this->branchid = @$_SESSION['branchid'];
 	    	$app->get('/schedules', function () {
 	    		$this->getAllByFranchise(1);
 	    	});
@@ -34,11 +36,11 @@ class Schedule
     }
     function getAllByFranchise($franchiseid) { 
           
-        $sql = "SELECT * from schedule s where branchid = :franchiseid";
+        $sql = "SELECT * from schedule s where branchid = :branchid";
             try {
                     $db = getConnection();
                     $stmt = $db->prepare($sql);
-                    $stmt->bindParam("franchiseid", $franchiseid);
+                    $stmt->bindParam("branchid", $this->branchid );
                     $stmt->execute();
                     $departments = $stmt->fetchAll(PDO::FETCH_OBJ);
                     $db = null;

@@ -35,6 +35,7 @@ define(['text!jobtypes/tpl/lists.html','jobtypes/collections/jobtypes','jobtypes
 			},
 			 
 			fetchJobTypes:function(){
+				var spin = this.setting.showLoading('Saving info please wait',this.$el,{top:'30%'});
 				var that = this;
 				var _data = {}; 
 				 _data['search'] = this.searchText;
@@ -51,6 +52,17 @@ define(['text!jobtypes/tpl/lists.html','jobtypes/collections/jobtypes','jobtypes
 						that.$el.find('tbody').append(objJobType.$el);
 						that.setting.jobTypes[model.attributes['id']] = model.attributes['name'];
 					})
+					if(data.length < 1){
+						var trNoRecord = '<tr><td colspan="5">  <div class="col-lg-9 pull-right"><P> Boo... You have no job types ';
+						trNoRecord +='<button type="button" class="btn btn-labeled btn-primary add-new" data-toggle="modal" data-target="#newjobtypes">';
+						trNoRecord +=' <span class="btn-label"><i class="fa fa-add"></i></span>Click me to ';
+						trNoRecord += 'add new';
+						trNoRecord += '</button> ';
+						trNoRecord += '</div></td>';	
+						trNoRecord += '</tr>';
+						that.$el.find("table tbody").append(trNoRecord);
+					}
+					spin.stop();
 					that.offsetLength = data.length;
 					that.fetched = that.fetched + data.length;
 					

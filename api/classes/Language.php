@@ -4,9 +4,10 @@ class Language
     public $offset = 0;
 	public $app = null;
     // method declaration
+    public $branchId;
     function __construct($app){
     	// Section language
-    	 
+    	 $this->branchId = @$_SESSION['branchid'];
     	$app->get('/languages', function () {
             if(authorize('abc')){
                 $this->getLanguages(1);

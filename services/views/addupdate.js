@@ -21,7 +21,13 @@ define(['text!services/tpl/addupdate.html','services/models/service','services/v
 	                    
 	                    that.$el.find('a[data-toggle="'+tog+'"]').not('[data-title="'+sel+'"]').removeClass('active').addClass('notActive');
 	                    that.$el.find('a[data-toggle="'+tog+'"][data-title="'+sel+'"]').removeClass('notActive').addClass('active');
-	                })
+	                    if(sel == "Y"){
+	                    	that.$el.find('.show-bookable').slideDown('fast')
+	                    }else{
+	                    	that.$el.find('.show-bookable').slideUp('fast');
+	                    }
+	                    	
+				})
 			},
 			closeView:function(){
 				this.$el.find('#newservice').modal('toggle'); 
@@ -31,12 +37,34 @@ define(['text!services/tpl/addupdate.html','services/models/service','services/v
 				// this.remove();  
 				// Backbone.View.prototype.remove.call(this);
 			},
+			clearErrorFilter:function(){
+				this.$el.find('.name-error').addClass('hide');
+				this.$el.find('.price-error').addClass('hide')
+				this.$el.find('.time-error').addClass('hide')
+			},
 			save:function(){ 
-				var name = this.$el.find('#txtname').val();
-				var type = this.$el.find('#bookable').val() 
+				this.clearErrorFilter();
+				var name = this.$el.find('#txtservice').val();
+				var type = this.$el.find('#radioBtn .active').data('title') 
 				var comments = this.$el.find('#txtcomments').val();
 				var time = this.$el.find('#txttime').val();
-				var price = this.$el.find('#txtprice').val() 
+				var price = this.$el.find('#txtprice').val();
+				console.log(type)
+				 if(!name){
+					 this.$el.find('.name-error').removeClass('hide')
+					 return false;
+				 }
+				 if(type == "Y"){
+					 if(!price){
+						 this.$el.find('.price-error').removeClass('hide')
+						 return false;
+					 }
+					 if(!time){
+						 this.$el.find('.time-error').removeClass('hide')
+						 return false;
+					 }
+				
+				 }
 				 	var objService = new ServiceModel();
 		            	objService.set('branchid',1);
 		            	objService.set('name',name);

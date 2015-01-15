@@ -2368,8 +2368,7 @@ input[type="checkbox"]:checked::after,
 .top-message{
 	position: absolute;
 top: 94px;
-left: 30%;
-min-width: 30%;
+left: 30%; 
 z-index: 9;
 }
 

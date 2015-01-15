@@ -1,59 +1,35 @@
- 
-							<div id="search_container">
+<div class=" ">
+	<button type="button" class="btn btn-labeled btn-primary add-new-dep"
+		data-toggle="modal" data-target="#newemployee">
+		<span class="btn-label"><i class="fa fa-add"></i></span>Click me to
+		add new
+	</button>
+	<form class="navbar-form navbar-right visible-lg" role="search">
+		<div class="form-group">
+			<input type="text" id="txtsearchemployees" class="form-control"
+				placeholder="Search..">
+		</div>
+		<button type="button" class="btn btn-primary">
+			<i class="fa fa-search"></i>
+		</button>
+	</form>
+</div>
+<div class="row md5">&nbsp;</div>
+<div class="table-responsive">
+	<table class="table table-hover table-bordered table-striped">
+		<thead>
+			<tr>
+				<th>Basic Info</th>
+				<th>Employees</th>
+				<th>Status</th>
+				<th>Created On</th>
+				<th>Action</th>
+			</tr>
+		</thead>
+		<tbody>
 
-								<div class="col-md-3">
-									<div class="lable_container_bottom">
-										<span class="gray_label label-primary">6</span> Search
-										Results
-									</div>
-								</div>
 
-								 	<div class="col-md-1 pull-right">
-									<div class="refresh-cicle ">
-										<a class='refresh'><i class="fa fa-refresh"></i></a>
-									</div>
-								</div>
-								<div class="col-md-5 pull-right">
-									<div class="outer_container">
-										<div class="input-group">
-											<span id="basic-addon1"
-												class="input-group-addon input-group-tag">Search</span> <input
-												type="text" aria-describedby="basic-addon1"
-												placeholder="eg branch name" class="input-feaild">
-											<div class="input-group-btn">
+		</tbody>
 
-												<button aria-expanded="false"
-													class="btn btn-default search-icon" type="button">
-													<i class="fa fa-search"></i>
-
-												</button>
-
-											</div>
-										</div>
-									</div>
-
-								</div>
-							
-							</div>
-						 
-				 
-				<div class="row btn-add-new">
-					<div class="col-lg-12">
-						<div id="add_container">
-							<i class="fa fa-plus"></i> Add New
-						</div>
-					</div>
-				</div>
-				<div class="row">
-
-					<!-- Line Chart Example -->
-					<div class="col-lg-12">
-						<table class="table listing">
-							<thead>
-
-								 
-
-							</thead>
-
-						</table>
-						</div>  
+	</table>
+</div>

@@ -1,11 +1,14 @@
-define(['jquery','language/collections/languages','spin'], function (jquery,Language,Spinner) {
+define(['jquery','language/collections/languages','spin','moment','flex',
+		'views/main_container'], function (jquery,Language,Spinner,moment,flex,Container) {
     'use strict';
     var app = Backbone.Model.extend({
-        load: function (callback) {
+        load: function (users) {
         	 this.language = {};
+        	 var that = this;
         	 this.selectedLanguage = 1;
         	 this.jobTypes = {};
         	 this.services = {};
+        	 this.users = users || {};
              this.set(_.extend({
                 env: 'TEST',
                 complied: 1,
@@ -21,45 +24,72 @@ define(['jquery','language/collections/languages','spin'], function (jquery,Lang
 			  var that = this;
 			    this.objLanguage.fetch({data: {specific:1,languageid:this.selectedLanguage}, success: function(data) {
                                     //alert(key.languagetitle);
+			    		that.checkError('err');
 			    	  _.each(data.toJSON(), function( key, value ) {
 			    		  that.language[key.title] = key.languagetitle;
-			    	 }) 
-			    	  if ($.isFunction(callback)) {
-			            callback.call();
-			          }
+			    	   })  
+			             
+			           
 			    }}); 
         },
         
- 
+        loadPages : function() {
+			var objContainer = new Container({
+				setting : this
+			});
+			$('#wrapper').html(objContainer.objHeader.$el);
+			$('#wrapper').append(objContainer.objLeftMenu.$el);
+			$('#wrapper').append(objContainer.$el);
+			$('#page-wrapper').find('.page-content').html(
+			objContainer.objBreadCrumb.$el);
+			$('#page-wrapper').find('.page-content').append(
+			objContainer.objDashboard.$el);
+			$('#wrapper').append(objContainer.objFooter.$el);
+			console.log('I am here at the dashboard')
+		},
         getUser: function () {
-            var URL = "";
-            jQuery.getJSON(URL, _.bind(function (tsv, state, xhr) {
+            var URL = "api/getsession";
+            var that = this;
+            jQuery.getJSON(URL,  function (tsv, state, xhr) {
                 var _json = jQuery.parseJSON(xhr.responseText);
-                if (this.checkError(_json)) {
-                    return false;
-                }
-                this.set("user", _json);
+                that.users = _json.user;
+                 
                 var allowedAdmin = ['admin', 'jayadams', 'demo'];
-                if (allowedUser.indexOf(this.get("user").userId) > -1) {
-                    this.mainContainer.$(".local-adds").hide();
+                if(typeof that.users !="undefined" && that.users.setting.is_logged_in){
+                	that.loadPages();
+                }else{
+                	    require(['authorize/views/login'],function(login){
+                        	$('body').html(new login().$el);
+                        })
+                     
                 }
-                else {
-                    this.mainContainer.$(".local-adds").hide();
-                }
+                return that.users;
                
 
-            }, this)); 
-        }, 
-        clearCache: function () {
+            } ); 
+         }, 
+         getFormatedDate:function(date){
+             if(date) 
+	            return moment(date).fromNow();;
+         },
+         clearCache: function () {
             window.setTimeout(_.bind(this.removeAllCache, this), 1000 * 60 * 30);
-        },
-        checkError: function (result) {
-            var isError = false;
-            if (result && result[0] && result[0] == "err") {
-                isError = true;
+         },
+         checkError: function (result) {
+            var isError = true; 
+            if(typeof this.users !="undefined"){
+	            console.log(this.users.is_logged_in)
+	            if(typeof this.users.setting !="undefined" && this.users.setting.is_logged_in){
+	            	console.log('I am inside true statement')
+	               isError = false;
+	            }else{
+	            	this.getUser();
+	            	 
+	            }
             }
-            return isError;
-        },
+            
+            
+         },
         autoLoadImages: function () {
             var preLoadArray = []
             $(preLoadArray).each(function () {
@@ -258,7 +288,7 @@ define(['jquery','language/collections/languages','spin'], function (jquery,Lang
                 $('#wp_li_' + lastActiveWorkSpace).append('<div class="spinner"><div class="bounce1"></div><div class="bounce2"></div><div class="bounce3"></div></div>');
             }
         }, 
-        getData: function (data) {
+        getUsersData: function (data) {
             var app = this;
             $.ajax({
                 dataType: "json",
@@ -395,18 +425,23 @@ define(['jquery','language/collections/languages','spin'], function (jquery,Lang
             return msie;
         }, 
         successMessage:function(text){
+        	if(!text || text == "")
+        		text = this.language['successtext'];
         	var info = '<div class="alert alert-success top-message">';
-        	info +='<strong>'+this.language['successalert']+':</strong>  '+ this.language['successtext']+'.';
+        	info +='<strong>'+this.language['successalert']+':</strong>  '+ text +'.';
         	info +='</div>';
         	$(".page-content").prepend(info);
-        	setTimeout(function(){ $(".page-content .top-message").remove()}, 3000);
+        	setTimeout(function(){ $(".page-content .top-message").remove()}, 4000);
         },
         errorMessage:function(text){
+        	if(!text || text == "")
+        		text = this.language['errortext'];
+        	
         	var info = '<div class="alert alert-error top-message">';
-        	info +='<strong>'+this.language['erroralert']+':</strong>  '+ this.language['errortext']+'.';
+        	info +='<strong>'+this.language['erroralert']+':</strong>  '+ text +'.';
         	info +='</div>';
         	$(".page-content").prepend(info);
-        	setTimeout(function(){ $(".page-content .top-message").remove()}, 3000);
+        	setTimeout(function(){ $(".page-content .top-message").remove()}, 4000);
         } 
     });
 

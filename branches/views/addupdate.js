@@ -5,16 +5,25 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
 			 events:{
 				 'click .close-p':"closeView", 
 				 "click .save-p":"save",
-				 "click .btn-save":"saveSteps"
+				 "click .btn-save":"saveSteps",
+				 "keyup #txtname":'changeDepartmentName'
 			 },
 			 id:"rootwizard",
 			  initialize: function () {
 				this.id = 0;
+				this.departmentName = 'Department';
 				this.template = _.template(template);
 				this.setting = this.options.setting;
 				this.objModelBranch = new ModelBranch();
 				this.render();
 				
+			},
+			changeDepartmentName:function(ev){
+				var text = $(ev.target).val();  
+				if(text)
+				this.$el.find('.department-name').html(text);
+				else
+					this.$el.find('.department-name').html('newly created department');
 			},
 			render: function () {  
 				this.$el.html(this.template( ));
@@ -78,7 +87,26 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
 						that.$el.find('.pagerw .next').show();
 						that.$el.find('.pagerw .finish').hide();
 					}
+					console.log($current);
+					switch($current){
+					case 1:
+						that.changeText('Follow the instruction to create <strong>new department</strong>, These are basic information each department have name, language, timings(close at, open at) etc.');
+						 break;
 					 
+					case 2:
+						that.changeText('Add a few <strong>Job types</strong> eg <em> Hair Dresser </em>, if you leave this empty, than no problem, you can add this later. but remember each department must have job type.');
+					 	break;
+				 
+					case 3:
+						that.changeText('Add a few <strong>Services</strong>, if you leave this empty, than no problem, you can add this later. but remember each department must have Service eg Cleaner.');
+					 break;
+					case 4:
+						that.changeText('You almost done, We would not bother you more, Simply add <strong>Employees</strong>, Who is working with you in this department, if you leave this empty, you can add back later.');
+						break;
+					case 5:
+						that.changeText('<strong> Great! </strong> You have successfully created <strong>' + that.$el.find('.department-name').html() + '</strong>, If you want to add schedule, simply create a new schedule. I hope you know how to schedule otherwise, read <em>FAQ </em>. ');
+						break;
+					} 
 					
 					
 				} ,onNext:function(tab, nav, index){
@@ -102,6 +130,9 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
 					}
 				} });
 			
+			},
+			changeText:function(txt){
+				this.$el.find('.top-info').html(txt);
 			},
 			saveBasicInfo:function(id){
 				this.clearFormInput();
@@ -157,8 +188,9 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
 					    	 var diff = that.calculate(start,end);
 					    	 console.log(index + 'start '+ start + ' end '+ end + 'difference')
 					    	 if(diff < 1 ){
-					    		var span = '<span class="help-block"><i class="fa fa-warning"></i> Correct time for '+ index +'</span>';
+					    		var span = '<span class="help-block"><i class="fa fa-warning"></i>  We opened '+that.$el.find('.department-name').html() + ' on ' + index +'</span>';
 					    		 that.$el.find("#txts"+index).after(span);
+					    		 var span = '<span class="help-block"><i class="fa fa-warning"></i> We closed '+that.$el.find('.department-name').html()+ ' on' + index +'</span>';
 					    		 that.$el.find("#txte"+index).after(span);
 					    		 returnValue = false;
 					    	 }
@@ -173,15 +205,13 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
                   this.objModelBranch.set({timing:data});
  				 
  				  $.when(this.objModelBranch.save()).done(function(){
- 					this.showMessage('Basic Info, setting and timing successfuly saved.',id);
  					
  				  }).fail(function(){
- 					  this.showMessage('Problem saving info',id);
- 					   
+ 					    
  				   });
- 			 
+ 				 that.setting.successMessage(that.$el.find('.department-name').html() + ' saved successfuly, go ahead and complete the wizard. ');
  				 spin.stop ();
- 				  
+ 				
 			},
 			calculate:function(time1,time2) {
 				 if(time1 == 0 || time2 == 0) return 0;
@@ -191,48 +221,7 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
 		         return hours;
 		     },
 			showMessage:function(text,id){
-				 
-				var time = ""; 
-				this.id = id;
-				if( this.days.length == 0 && this.id == 1)
-				///	time = "although time is not selected, you can add it later.  ";
-				if(id == 1)
-					this.$el.find('.btn-save').html('Go to next step').removeClass('btn-save').addClass('next-step-ahead').attr('data-id',this.id);
-				
-				
-				var str = '<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>'+text+ time;
-                
-				if (id !=5)
-                	   str +='<strong><a class="next-step-ahead" style="cursor:pointer" data-id='+this.id+'>Go to Next Step</a></strong>.';
-                  
-                   str +='</div>';
-                this.$el.find('.show-message').html(str);
-                this.$el.find('.next-step-ahead').attr('data-id',this.id);
-                var that = this;
-				this.$el.find('.next-step-ahead').on('click',function(){
-					console.log(that.id)
-					 switch(that.id){
-					case 1:
-						  that.showMessage('Add Few job types to department for example, Manager, Hair dresser, cleaner etc, or ',2)
-						  ///that.$el.find('.pager .next-1').click();
-						break;
-					case 2:
-						  
-						  that.showMessage('Add some services to department for example, Hair dressing, massage etc, or  ',3)
-						  ///that.$el.find('.pager .next-1').click();
-							break;
-					case 3:
-						  that.$el.find('.pager .next-1').click();
-						  that.showMessage('Add employees to department for example XYZ who is working with you, or ',4)
-							break;
-					case 4:
-						  that.$el.find('.next-step-ahead').html('All done');
-						 
-						  that.showMessage('Schedule your employee timing and assign task, <a>You have successfuly created new department</a>',5)
-							break;
-						
-					}
-				});
+				  
 			},
 			saveJobTypes:function(){
 				

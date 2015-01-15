@@ -1,9 +1,10 @@
 <?php
 class JobTypes
 { 
-
-    // method declaration
-    function __construct($app){
+	public $branchid;
+	// method declaration
+	function __construct($app){
+		$this->branchId = @$_SESSION['branchid'];
     	$app->get('/jobtypes', function () {
     		$request = Slim::getInstance()->request();
     		
@@ -19,7 +20,7 @@ class JobTypes
     		});
     }
     function getAll( ) {  
-        $sql = "select * from branches";
+        $sql = "select * from branches  where branchid = $this->branchId";
             try {
                     $db = getConnection();
                     $stmt = $db->query($sql);
@@ -40,16 +41,15 @@ class JobTypes
     }
     function getAllByBranchId($request) { 
     	$search = "";
-    	echo json_encode($_GET['search']);
     	if(@$_GET['search'] !=''){
     		$search = $_GET['search'];
-    		$search = " and name like %$search%";
+    		$search =  "  AND  (name LIKE '%". $search ."%' OR comments LIKE '%". $search ."%')";
     	}
-    	$sql = "select * from jobtypes where branchid = :branchid $search";
-            try {
+    	$sql = "select * from jobtypes where branchid = $this->branchId  $search";
+    	    try {
                     $db = getConnection();
                     $stmt = $db->prepare($sql);
-                    $stmt->bindParam("branchid", $branchId);
+                   // $stmt->bindParam("branchid", $branchId);
                     $stmt->execute();
                     $departments = $stmt->fetchAll(PDO::FETCH_OBJ);
                     $db = null;
@@ -94,7 +94,7 @@ class JobTypes
 		    			$stmt = $db->prepare($sql);
 		    			$stmt->bindParam("name", $params->name);
 		    			$stmt->bindParam("comments", $params->comments);
-		    			$stmt->bindParam("branchid", $params->branchid); 
+		    			$stmt->bindParam("branchid", $this->branchId); 
 		    	
 		    			$stmt->execute();
 		    			$params->id = $db->lastInsertId();

@@ -43,6 +43,7 @@ define(['text!jobtypes/tpl/addupdate.html','jobtypes/views/list','jobtypes/model
 		                //this.closePopup();
 		                var objjobtype = new JobType({model:objjobtype,page:this.options.page,setting:this.options.page.setting});
 						this.options.page.$el.find('tbody').prepend(objjobtype.$el);
+						this.options.page.setting.jobTypes[this.options.page.setting.jobTypes.length-1] = name;
 						this.closeView();
 						this.options.page.setting.successMessage();
 						this.$el.find('#txtname').val('');

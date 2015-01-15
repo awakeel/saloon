@@ -3,7 +3,9 @@ class Services
 { 
 
     // method declaration
+    public $branchId;
     function __construct($app){
+    	$this->branchId = @$_SESSION['branchid'];
     	$app->get('/services', function () {
     		$this->getAllByBranchId(1);
     	});
@@ -36,13 +38,17 @@ class Services
                     echo json_encode($error);
             }
     }
-    function getAllByBranchId($branchId) { 
-          
-        $sql = "select * from services where branchid = :branchid  ";
+    function getAllByBranchId( ) { 
+    	$search = "";
+    	if(@$_GET['search'] !=''){
+    		$search = $_GET['search'];
+    		$search =  "  AND  (name LIKE '%". $search ."%' OR comments LIKE '%". $search ."%')";
+    	}
+       $sql = "select * from services where branchid = :branchid  $search ";
             try {
                     $db = getConnection();
                     $stmt = $db->prepare($sql);
-                    $stmt->bindParam("branchid", $branchId);
+                    $stmt->bindParam("branchid", $this->branchId);
                     $stmt->execute();
                     $departments = $stmt->fetchAll(PDO::FETCH_OBJ);
                     $db = null;
@@ -86,7 +92,7 @@ class Services
     			$stmt = $db->prepare($sql);
     			$stmt->bindParam("name", $params->name);
     			$stmt->bindParam("comments", $params->comments);
-    			$stmt->bindParam("branchid", $params->branchid);
+    			$stmt->bindParam("branchid", $this->branchId);
     			$stmt->bindParam("price", $params->price);
     			$stmt->bindParam("time", $params->time);
     			$stmt->execute();

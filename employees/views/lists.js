@@ -5,7 +5,7 @@ define(['text!employees/tpl/lists.html','employees/collections/employees','emplo
 			tagName:"div",
 			className:"col-lg-13",
 			events:{
-				"keyup #txtsearch":"searchjobtypes",
+				"keyup #txtsearchemployees":"searchEmployees",
 				"click .close-p":"closePopup",
 				//"click .save-p":"saveToken",
 				"click .delete-p":"deleteToken",
@@ -37,7 +37,8 @@ define(['text!employees/tpl/lists.html','employees/collections/employees','emplo
 			fetchEmployees:function(){
 				var that = this;
 				var _data = {}; 
-				/// _data['search'] = this.searchText;
+				var spin = this.setting.showLoading('Saving info please wait',this.$el,{top:'30%'});
+				 _data['search'] = this.searchText;
 				// _data['specific'] = 0;
 				// _data['jobtypeid'] = that.jobtypeFilter;
 				// this.objjobtypes.reset();
@@ -57,6 +58,7 @@ define(['text!employees/tpl/lists.html','employees/collections/employees','emplo
                        // that.$el.find("tbody").append("<tr id='tr_loading'><td colspan='6'><div class='gridLoading fa fa-spinner spinner' style='text-align:center; margin-left:auto;'></div></td>");
                          
                     //} 
+					spin.stop();
 					 var id = null;  
 				}}) 
 				
@@ -107,7 +109,7 @@ define(['text!employees/tpl/lists.html','employees/collections/employees','emplo
                     this.fetchJobTypes(this.offsetLength);
                 }
             },
-            searchjobtypes:function(ev){ 
+            searchEmployees:function(ev){ 
                      this.searchText = ''; 
                      this.timer = 0;
                      var that = this;
@@ -121,7 +123,7 @@ define(['text!employees/tpl/lists.html','employees/collections/employees','emplo
                           if(code == 8 || code == 46){
                                  if(text){ 
 		                        	 that.searchText = text;
-			                          that.fetchjobtypes();
+			                          that.fetchEmployees();
 		                         }
                            }else{
 		                   
@@ -130,7 +132,7 @@ define(['text!employees/tpl/lists.html','employees/collections/employees','emplo
 		                            that.timer = setTimeout(function() { // assign timer a new timeout 
 		                                if (text.length < 2) return;
 		                                that.searchText = text;
-		                                that.fetchjobtypes(that.langaugeFilter);
+		                                that.fetchEmployees(that.langaugeFilter);
 		                           }, 500); // 2000ms delay, tweak for faster/slower
                           }
             },

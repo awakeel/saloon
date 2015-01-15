@@ -52,7 +52,7 @@ define(['text!schedule/tpl/schedule.html','schedule/collections/schedules','full
 			            },
 			            defaultDate: 'agendaDay',
 			            editable: true,
-			            allDaySlot: true,
+			            allDaySlot: false,
 			            selectable: true,
 			            slotMinutes: 15,
 			            events:models,

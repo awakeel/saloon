@@ -1,10 +1,11 @@
 <?php
 class Employees
 { 
-
+	public $branchid;
     // method declaration
     function __construct($app){
-    	$app->get('/employees', function () {
+    	$this->branchId = @$_SESSION['branchid'];
+    	$app->get('/employees', function () { 
     		$this->getAllByBranchId(1);
     	});
     	$app->post('/employees',function(){
@@ -17,7 +18,7 @@ class Employees
     		});
     }
     function getAll( ) {  
-        $sql = "select * from employees";
+        $sql = "select * from employees where branchid = $this->branchId" ;
             try {
                     $db = getConnection();
                     $stmt = $db->query($sql);
@@ -36,13 +37,17 @@ class Employees
                     echo json_encode($error);
             }
     }
-    function getAllByBranchId($branchId) { 
-          
-        $sql = "select * from employees where branchid = :branchid";
+    function getAllByBranchId() { 
+    	$search = "";
+    	if(@$_GET['search'] !=''){
+    		$search = $_GET['search'];
+    		$search =  "  AND  (firstname LIKE '%". $search ."%' OR lastname LIKE '%". $search ."%' OR phone LIKE '%". $search ."%' OR lastname LIKE '%". $search ."%')";
+    	} 
+        $sql = "select * from employees where branchid = :branchid $search";
             try {
                     $db = getConnection();
                     $stmt = $db->prepare($sql);
-                    $stmt->bindParam("branchid", $branchId);
+                    $stmt->bindParam("branchid", $this->branchId);
                     $stmt->execute();
                     $employees = $stmt->fetchAll(PDO::FETCH_OBJ);
                     $db = null;
@@ -92,7 +97,7 @@ class Employees
 		    			$stmt->bindParam("pas", $params->password);
 		    			$stmt->bindParam("add", $params->address);
 		    			$stmt->bindParam("about", $params->about);
-		    			$stmt->bindParam("branchid", $params->branchid); 
+		    			$stmt->bindParam("branchid", $this->branchId); 
 		    			$stmt->bindParam("type", $params->type);
 		    	
 		    			$stmt->execute();

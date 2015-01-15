@@ -5,7 +5,7 @@ define(['text!services/tpl/lists.html','services/collections/services','services
 			tagName:"div",
 			className:"col-lg-13",
 			events:{
-				"keyup #txtsearch":"searchjobtypes",
+				"keyup #txtsearchservices":"searchServices",
 				//"click .close-p":"closePopup",
 				//"click .save-p":"saveToken",
 				"click .delete-p":"deleteToken",
@@ -38,7 +38,8 @@ define(['text!services/tpl/lists.html','services/collections/services','services
 			fetchServices:function(){
 				var that = this;
 				var _data = {}; 
-				/// _data['search'] = this.searchText;
+				var spin = this.setting.showLoading('Saving info please wait',this.$el,{top:'30%'});
+				 _data['search'] = this.searchText;
 				// _data['specific'] = 0;
 				// _data['jobtypeid'] = that.jobtypeFilter;
 				// this.objjobtypes.reset();
@@ -54,12 +55,22 @@ define(['text!services/tpl/lists.html','services/collections/services','services
 					})
 					that.offsetLength = data.length;
 					that.fetched = that.fetched + data.length;
-					
+					if(data.length < 1){
+						var trNoRecord = '<tr><td colspan="5">  <div class="col-lg-9 pull-right"><P> Boo... You have no service ';
+						trNoRecord +='<button type="button" class="btn btn-labeled btn-primary add-new" data-toggle="modal" data-target="#newservice">';
+						trNoRecord +=' <span class="btn-label"><i class="fa fa-add"></i></span>Click me to ';
+						trNoRecord += 'add new';
+						trNoRecord += '</button> ';
+						trNoRecord += '</div></td>';	
+						trNoRecord += '</tr>';
+						that.$el.find("table tbody").append(trNoRecord);
+					}
 					//if (that.fetched < parseInt(11)) {
                        // that.$el.find("tbody tr:last").attr("data-load", "true");
                        // that.$el.find("tbody").append("<tr id='tr_loading'><td colspan='6'><div class='gridLoading fa fa-spinner spinner' style='text-align:center; margin-left:auto;'></div></td>");
                          
                     //} 
+					spin.stop();
 					 var id = null;
 					 
 				}}) 
@@ -111,7 +122,7 @@ define(['text!services/tpl/lists.html','services/collections/services','services
                     this.fetchJobTypes(this.offsetLength);
                 }
             },
-            searchjobtypes:function(ev){ 
+            searchServices:function(ev){ 
                      this.searchText = ''; 
                      this.timer = 0;
                      var that = this;
@@ -125,7 +136,7 @@ define(['text!services/tpl/lists.html','services/collections/services','services
                           if(code == 8 || code == 46){
                                  if(text){ 
 		                        	 that.searchText = text;
-			                          that.fetchjobtypes();
+			                          that.fetchServices();
 		                         }
                            }else{
 		                   
@@ -134,7 +145,7 @@ define(['text!services/tpl/lists.html','services/collections/services','services
 		                            that.timer = setTimeout(function() { // assign timer a new timeout 
 		                                if (text.length < 2) return;
 		                                that.searchText = text;
-		                                that.fetchjobtypes(that.langaugeFilter);
+		                                that.fetchServices(that.langaugeFilter);
 		                           }, 500); // 2000ms delay, tweak for faster/slower
                           }
             } 

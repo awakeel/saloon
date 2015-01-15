@@ -8,7 +8,7 @@ define(['text!branches/tpl/lists.html','branches/collections/branches','branches
 			 	"click .close-p":"closePopup",
 				//"click .save-p":"saveToken",
 				"click .delete-p":"deleteToken",
-				"click .btn-add-new":"addNew",
+				"click .add-new-dep":"addNew",
 				"click .refresh":'render'
 			},
             initialize: function () {
@@ -51,11 +51,20 @@ define(['text!branches/tpl/lists.html','branches/collections/branches','branches
 				 this.request = this.objBranches.fetch({data: _data, success: function(data) {
 					_.each(data.models,function(model){
 						var objBranch = new Branch({model:model,page:that,setting:that.setting});
-						that.$el.find('.listing').find("thead").append(objBranch.$el);
+						that.$el.find("table tbody").append(objBranch.$el);
 					})
 					that.offsetLength = data.length;
 					that.fetched = that.fetched + data.length;
-					
+					if(data.length < 1){
+						var trNoRecord = '<tr><td colspan="5">  <div class="col-lg-9 pull-right"><P> Boo... You have no department ';
+						trNoRecord +='<button type="button" class="btn btn-labeled btn-primary add-new-dep" data-toggle="modal" data-target="#newemployee">';
+						trNoRecord +=' <span class="btn-label"><i class="fa fa-add"></i></span>Click me to ';
+						trNoRecord += 'add new';
+						trNoRecord += '</button> ';
+						trNoRecord += '</div></td>';	
+						trNoRecord += '</tr>';
+						that.$el.find("table tbody").append(trNoRecord);
+					}
 					//if (that.fetched < parseInt(11)) {
                        // that.$el.find("tbody tr:last").attr("data-load", "true");
                        // that.$el.find("tbody").append("<tr id='tr_loading'><td colspan='6'><div class='gridLoading fa fa-spinner spinner' style='text-align:center; margin-left:auto;'></div></td>");

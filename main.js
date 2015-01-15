@@ -9,6 +9,7 @@
 			underscore : 'libs/underscore',
 			backbone : 'libs/backbone-min',
 			text : 'libs/text',
+			router:'router',
 			'moment' : 'libs/moment',
 			'bootstrap' : 'libs/bootstrap.min',
 			'flex' : 'js/flex',
@@ -49,38 +50,11 @@
 		}
 	});
 
-	define([ 'jquery', 'bootstrap', 'backbone', 'app', 'flex',
-			'views/main_container' ], function(jquery, bootstrap, Backbone,
-			app, flex, Container) {
-		var Router = Backbone.Router.extend({
-			routes : {
-				'' : 'dashboard'
-			},
-			initialize : function() {
-				this.dashboard();
-			},
-			dashboard : function() {
-				var settings = app.load(this.loadPages);
-			},
-			loadPages : function() {
-				var objContainer = new Container({
-					setting : app
-				});
-				$('#wrapper').append(objContainer.objHeader.$el);
-				$('#wrapper').append(objContainer.objLeftMenu.$el);
-				$('#wrapper').append(objContainer.$el);
-				$('#page-wrapper').find('.page-content').html(
-				objContainer.objBreadCrumb.$el);
-				$('#page-wrapper').find('.page-content').append(
-				objContainer.objDashboard.$el);
-				$('#wrapper').append(objContainer.objFooter.$el);
-			}
-
-		});
-		var mainRouter = new Router();
-		Backbone.history.start({
-			pushState : true
-		}); //Start routing
-	})
+	require([ 'jquery', 'bootstrap', 'backbone','router' ], function($,bootstrap,Backbone,router) {
+		var mainRouter = new router();
+			Backbone.history.start({
+				pushState : true
+			}); //Start routing
+		})
 
 })();

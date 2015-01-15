@@ -3,9 +3,11 @@ class Branches
 { 
 
     // method declaration
-    function __construct($app){
+    public $auth = null;
+    function __construct($app,$auth){
+    		$this->auth = $auth;
 	    	$app->get('/branches', function () {
-	    		$this->getAllByFranchise(1);
+	    		$this->getAllByFranchise();
 	    	});
     		$app->post('/branches', function () {
     			$request = Slim::getInstance()->request();
@@ -25,37 +27,53 @@ class Branches
 		        });
  
     }
-    function getAll( ) {  
-        $sql = "select * from branches";
+    function getAll( $franchiseid) {  
+    	if($this->auth->getLoggedInMessages() == false){
+    		return false;
+    	}
+        $sql = "select * from branches where franchiseid = $franchiseid";
             try {
                     $db = getConnection();
                     $stmt = $db->query($sql);
                     $branches = $stmt->fetchAll(PDO::FETCH_OBJ);
                     $db = null;
 
-            // Include support for JSONP requests
-            if (!isset($_GET['callback'])) {
-                echo json_encode($branches);
-            } else {
-                echo $_GET['callback'] . '(' . json_encode($branches) . ');';
-            }
-
+                 return $branches;
             } catch(PDOException $e) {
                     $error = array("error"=> array("text"=>$e->getMessage()));
                     echo json_encode($error);
             }
     }
-    function getAllByFranchise($franchiseid) { 
-          
-        $sql = "SELECT b.*,l.title,c.name as country,cu.`name` as currency FROM  branches b 
+    function getAllByBranchid( $branchid) {
+    	if($this->auth->getLoggedInMessages() == false){
+    		return false;
+    	}
+    	$sql = "select * from branches where id = $branchid";
+    	try {
+    		$db = getConnection();
+    		$stmt = $db->query($sql);
+    		$branches = $stmt->fetchAll(PDO::FETCH_OBJ);
+    		$db = null;
+    
+    		return $branches;
+    	} catch(PDOException $e) {
+    		$error = array("error"=> array("text"=>$e->getMessage()));
+    		echo json_encode($error);
+    	}
+    }
+    function getAllByFranchise() { 
+    	if($this->auth ->getLoggedInMessages() == false){
+    		return false;
+    	}  
+    	
+        $sql = "SELECT b.*,l.title as language,c.name as country,cu.`name` as currency FROM  branches b 
 				INNER JOIN languages l ON l.id = b.`languageid`
 				LEFT JOIN countries c ON  c.id = b.`countryid`
 				LEFT JOIN currencies cu ON cu.id = b.`currencyid`
-				   WHERE  franchiseid = 1  ";
+				   WHERE  franchiseid =  ".$this->auth->getFranchiseId();
             try {
                     $db = getConnection();
-                    $stmt = $db->prepare($sql);
-                    $stmt->bindParam("franchiseid", $franchiseid);
+                    $stmt = $db->prepare($sql); 
                     $stmt->execute();
                     $departments = $stmt->fetchAll(PDO::FETCH_OBJ);
                     $db = null;
@@ -74,7 +92,9 @@ class Branches
     }
      
     function saveBranches($request){
-    	 
+	    	if($this->auth->getLoggedInMessages() == false){
+	    		return false;
+	    	}
     		$params = json_decode($request->getBody());
     		if(@$params->id){
     			if(@$params->timing){
@@ -100,7 +120,7 @@ class Branches
     			}
     		}else{
 		    		$sql = "INSERT INTO branches (name, notes,franchiseid,languageid,currencyid,countryid) ";
-		    		$sql .="VALUES (:name, :notes , 1, :l, :c, :ct)";
+		    		$sql .="VALUES (:name, :notes ,  ".$this->auth->getFranchiseId().", :l, :c, :ct)";
 		    		try {
 		    			$db = getConnection();
 		    			$stmt = $db->prepare($sql);
@@ -109,6 +129,9 @@ class Branches
 		    			$stmt->bindParam("l", $params->languageid);
 		    			$stmt->bindParam("c", $params->currencyid);
 		    			$stmt->bindParam("ct", $params->countryid);
+		    			$stmt->bindParam("ct", $params->countryid);
+		    		 
+		    			
 		    			$stmt->execute();
 		    			$params->id = $db->lastInsertId();
 		    			$db = null;
@@ -137,6 +160,9 @@ class Branches
     
     }
     function dbSaveTiming($day,$open,$close,$branchid){
+    	if($this->auth->getLoggedInMessages() == false){
+    		return false;
+    	}
     	$sql = "INSERT INTO timings (day, opened,closed,branchid) ";
     	$sql .="VALUES (:day, :opened,:closed,:branchid)";
     	try {
